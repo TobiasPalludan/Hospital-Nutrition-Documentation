@@ -13,10 +13,11 @@ typedef struct PersonInfo {
 	char name[NAME_SIZE];
 	int height;
 	char allergy[ALLERGY_SIZE];
-	char preferences[PREFERENCES_SIZE];
+	/*char preferences[PREFERENCES_SIZE];*/
 }PersonInfo;
 
 typedef struct foodIntake {
+	char *timeStamp;
 	char *dishName;
 	char *indgredients;
 	int totalKJ;
