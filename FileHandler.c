@@ -9,6 +9,7 @@
 #define TIME_STAMP_SIZE 13
 #define DISH_NAME_SIZE 20
 #define INGREDIENTS_SIZE 100
+#define FILE_NAME_SIZE 20
 
 typedef struct personInfo {
 	int id;
@@ -32,7 +33,7 @@ void add_food_intake(foodIntake intake, personInfo person);
 
 int main(void)
 {
-	personInfo Casper = { 1, "Uranus", 666, "Casper", 54, "Kris" };
+	personInfo Casper = { 3, "Uranus", 666, "Casper", 54, "Kris" };
 	foodIntake feedCasper = { "18:18", "TUANS MOR", "White sauce", 9001, 9 };
 	add_food_intake(feedCasper, Casper);
 	return 0;
@@ -42,22 +43,23 @@ void add_food_intake(foodIntake intake, personInfo person)
 {
 	
 	FILE *foodFilePtr;
-	//char foodFileString[] = "%d, %d", person->height, person->id;
 
+	char fileName[FILE_NAME_SIZE];
+	sprintf(fileName, "%d.txt", person.id); /*Creates file name from ID of the person*/
+
+	//char foodFileString[] = "%d, %d", person->height, person->id;
 	if (foodFilePtr != NULL)
 	{
-		foodFilePtr = fopen("testIndtake.txt", "a");
+		foodFilePtr = fopen(fileName, "a");
 		fprintf(foodFilePtr, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
 		//fprintf(foodFilePtr, "%d, %s, %d, %s, %d, %s\n", Casper.id, Casper.department, Casper.cprNumber, Casper.name, Casper.height, Casper.allergy);
 	}
 	else
 	{
 		printf("File not open");
-		foodFilePtr = fopen("testIndtake.txt", "w+");
+		foodFilePtr = fopen(fileName, "w+");
 		fprintf(foodFilePtr, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
 		//fprintf(foodFilePtr, "%d, %s, %d, %s, %d, %s\n", Casper.id, Casper.department, Casper.cprNumber, Casper.name, Casper.height, Casper.allergy);
 	}
-
-
 	fclose(foodFilePtr);
 }
