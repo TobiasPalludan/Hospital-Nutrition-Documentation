@@ -50,9 +50,9 @@ int main(void)
 
     for (i = 0; i < DATABASE; i++)
     {
+        len = ftell(ifp);
         fprintf(ifp, "%s\t%s\t%d\n",
                 ID[i].firstName, ID[i].lastName, ID[i].yearBorn);
-        len = ftell(ifp);
         
         for (j = 0; j < 1; j++)
         {
