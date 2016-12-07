@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include<direct.h>
+#include <direct.h>
 
 #define DEPARTMENT_SIZE 15
 #define NAME_SIZE 30
@@ -94,7 +94,7 @@ void add_condition_log(condition conditionLog)
 	char fileName[FILE_NAME_SIZE];
 	char log[LOG_FILE_SIZE];
 	sprintf(fileName, "patients/%d/%d condition.txt", conditionLog.id, conditionLog.id); /*Creates file name from ID of the person*/
-	sprintf(log, "%d %s %d %d %lf %d %lf %s %s\n", conditionLog.id, conditionLog.timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.ilness, conditionLog.allergy); /*Creates file name from ID of the person*/
+	sprintf(log, "%d %s %d %d %lf %d %.2lf %s %s\n", conditionLog.id, conditionLog.timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.ilness, conditionLog.allergy); /*Creates file name from ID of the person*/
 	save_in_file(condtionFilePtr, log, fileName);
 }
 
@@ -107,7 +107,6 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 	}
 	else
 	{
-		printf("File not open");
 		filePtr = fopen(fileName, "w");
 		fprintf(filePtr, string);
 	}
