@@ -23,9 +23,10 @@ person make_person(char *firstName, char *lastName, int yearBorn){
 
 int main(void)
 {
-    int m = 0, len = 0, i = 0, j = 0;
+    char patient;
+    int len = 0, i = 0, j = 0;
     person ID[DATABASE];
-    int position[DATABASE][2];
+    int position[DATABASE][1];
 
     ID[0] = make_person("John", "Andersen", 1967);
     ID[1] = make_person("Martin", "Jorgensen", 2003);
@@ -37,21 +38,23 @@ int main(void)
     ID[7] = make_person("Lotte", "Boa", 1994);
     ID[8] = make_person("Mikkel", "Hansen", 1959);
     ID[9] = make_person("Lise", "Jacobsen", 1969);
-    ID[10] = make_person("Jens", "Mikkelsen", 2009);
+
+    printf("Enter the name of the patient you want to edit: ");
+    scanf(" %s", &patient);
     
     FILE *ifp;
 
-    ifp = fopen("randomacces", "wb");
+    ifp = fopen(&patient, "w+");
 
-    fprintf(ifp, "First name:\tLast name:\tYear:\n");
+    fprintf(ifp, "First name:\t\tLast name:\tYear:\n");
 
     for (i = 0; i < DATABASE; i++)
     {
-        fprintf(ifp, "%s\t\t%s\t%d\n",
+        fprintf(ifp, "%s\t%s\t%d\n",
                 ID[i].firstName, ID[i].lastName, ID[i].yearBorn);
         len = ftell(ifp);
         
-        for (j = 0; j < 2; j++)
+        for (j = 0; j < 1; j++)
         {
             position[i][j] = len;
             printf("position[%d][%d] = %d\n", i, j, len);
