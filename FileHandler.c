@@ -30,12 +30,14 @@ typedef struct foodIntake {
 }foodIntake;
 
 void add_food_intake(foodIntake intake, personInfo person);
+void add_person(personInfo person);
 
 int main(void)
 {
 	personInfo Casper = { 3, "Uranus", 666, "Casper", 54, "Kris" };
 	foodIntake feedCasper = { "18:18", "TUANS MOR", "White sauce", 9001, 9 };
 	add_food_intake(feedCasper, Casper);
+	add_person(Casper);
 	return 0;
 }
 
@@ -45,21 +47,40 @@ void add_food_intake(foodIntake intake, personInfo person)
 	FILE *foodFilePtr;
 
 	char fileName[FILE_NAME_SIZE];
-	sprintf(fileName, "%d.txt", person.id); /*Creates file name from ID of the person*/
+	sprintf(fileName, "%d IntakeLog.txt", person.id); /*Creates file name from ID of the person*/
 
-	//char foodFileString[] = "%d, %d", person->height, person->id;
 	if (foodFilePtr != NULL)
 	{
 		foodFilePtr = fopen(fileName, "a");
 		fprintf(foodFilePtr, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
-		//fprintf(foodFilePtr, "%d, %s, %d, %s, %d, %s\n", Casper.id, Casper.department, Casper.cprNumber, Casper.name, Casper.height, Casper.allergy);
 	}
 	else
 	{
 		printf("File not open");
-		foodFilePtr = fopen(fileName, "w+");
+		foodFilePtr = fopen(fileName, "w");
 		fprintf(foodFilePtr, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
-		//fprintf(foodFilePtr, "%d, %s, %d, %s, %d, %s\n", Casper.id, Casper.department, Casper.cprNumber, Casper.name, Casper.height, Casper.allergy);
 	}
 	fclose(foodFilePtr);
+}
+
+void add_person(personInfo person)
+{
+	FILE *personFilePtr;
+
+	char fileName[FILE_NAME_SIZE];
+	sprintf(fileName, "ID %d.txt", person.id); /*Creates file name from ID of the person*/
+
+	if (personFilePtr != NULL)
+	{
+		personFilePtr = fopen(fileName, "a");
+		fprintf(personFilePtr, "%d, %s, %d, %s, %d, %s\n", person.id, person.department, person.cprNumber, person.name, person.height, person.allergy);
+	}
+	else
+	{
+		personFilePtr = fopen(fileName, "w");
+		fprintf(personFilePtr, "%d, %s, %d, %s, %d, %s\n", person.id, person.department, person.cprNumber, person.name, person.height, person.allergy);
+	}
+
+	fclose(personFilePtr);
+
 }
