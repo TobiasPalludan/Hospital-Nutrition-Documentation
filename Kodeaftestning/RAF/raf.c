@@ -43,8 +43,13 @@ int main(void)
     scanf(" %s", &patient);
     
     FILE *ifp;
+    ifp = fopen(&patient, "r+");
 
-    ifp = fopen(&patient, "w+");
+    if(ifp == NULL) {
+        ifp = fopen(&patient, "w");
+        fclose(ifp);
+        ifp = fopen(&patient, "r+");
+    }
 
     fprintf(ifp, "First name:\t\tLast name:\tYear:\n");
 
