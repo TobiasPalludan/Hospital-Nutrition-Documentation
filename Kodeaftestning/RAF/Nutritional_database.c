@@ -13,7 +13,7 @@ typedef struct nutrition
 	float protein;
 } nutrition;
 
-/* Prototyper */
+/* Prototypes */
 void indexDatabase(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb);
 nutrition load_ingredient(char *ingredient, int kiloJoule, float protein);
 
