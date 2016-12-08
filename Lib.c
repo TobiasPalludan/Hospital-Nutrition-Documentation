@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Lib.h"
 
+/* Vi udregner BMI ud fra standard formlen */
 double BMI(double height, double weight){
   height = height / 100;
 
@@ -16,7 +17,6 @@ double BMR(double height, double weight, long long int cpr){
 
   /* Vi henter alderen */
   age = get_age(cpr);
-
 
   /* CPR ender på et lige tal = kvinde. Ulige tal = mand. */
   if (cpr % 2 == 0){
@@ -62,9 +62,42 @@ int get_age(long long int cpr){
   return age;
 }
 
+/* Fortæller nuværende tidspunkt med dato. */
 void datestamp(char output[]){
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
 
   sprintf(output, "%d-%d-%d %d:%d:%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+}
+
+/* Printer advarsel afhængig af advarsel_BMI's return værdi */
+void print_advarsel( FILE *filPointer, int tilstand)
+{
+    if(tilstand == 1)
+    {
+        fprintf(filPointer, "%s\n", "BMI er under 18,5.");
+    }
+    else if(tilstand == 0)
+    {
+        fprintf(filPointer, "%s\n", "BMI er mellem 25 og 30.");
+    }
+    else if(tilstand == -1)
+    {
+        fprintf(filPointer, "%s\n", "BMI er over 30.");
+    }
+}
+
+/* Returner værdi afhængig af BMI */
+int advarsel_BMI(double BMI)
+{
+    if (BMI < 18.5)
+        return 1;
+
+    else if (BMI >= 25 && BMI <= 30)
+        return 0;
+
+    else if(BMI > 30)
+        return -1;
+    else
+        return 2;
 }
