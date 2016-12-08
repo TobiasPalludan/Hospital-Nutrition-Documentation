@@ -3,22 +3,22 @@
 #include <string.h>
 #include "Lib.h"
 
-/* Vi udregner BMI ud fra standard formlen */
+/* We calculate BMI from the standard equation */
 double BMI(double height, double weight){
   height = height / 100;
 
   return weight / (height * height);
 }
 
-/* Vi udregner BMR ud fra standard formlen og i forhold til hvilket køn */
+/* We calculate BMR from the standard equation and in proportion to gender */
 double BMR(double height, double weight, long long int cpr){
   double BMR;
   int age;
 
-  /* Vi henter alderen */
+  /* We get the age */
   age = get_age(cpr);
 
-  /* CPR ender på et lige tal = kvinde. Ulige tal = mand. */
+  /* Last digit in CPR determine gender. Even number = Female. Odd number = Male. */
   if (cpr % 2 == 0)
   {
     BMR = 665.0955 + 9.5634 * weight + 1.8496 * height - 4.6756 * age;
@@ -32,7 +32,7 @@ double BMR(double height, double weight, long long int cpr){
   return BMR;
 }
 
-/* Vi finder alderen ud fra datoen i dag. Datoen i dag findes vha. time.h */
+/* Based on the current day we find the age. */
 int get_age(long long int cpr){
   int age, dateofbirth, year, month, day, temp, n_7;
 
@@ -57,7 +57,7 @@ int get_age(long long int cpr){
 
   age = (tm.tm_year + 1900) - year;
 
-  /* Tjekker om man i nuværende år er fyldt år med måneder og dage */
+  /* Checks if the person has had birthday this yeah with months and days */
   if (month > tm.tm_mon + 1)
     --age;
 
@@ -67,15 +67,16 @@ int get_age(long long int cpr){
   return age;
 }
 
-/* Fortæller nuværende tidspunkt med dato. */
+/* We get the current day by using the library time.h */
 void datestamp(char output[]){
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
 
-  sprintf(output, "%d-%d-%d %d:%d:%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+  sprintf(output, "%d-%d-%d %d:%d:%d", tm.tm_mday, tm.tm_mon + 1,
+                tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
-/* Printer advarsel afhængig af advarsel_BMI's return værdi */
+/* Prints a warning depending on warning_BMI's return value. */
 void print_advarsel( FILE *filPointer, int tilstand)
 {
     if(tilstand == 1)
@@ -92,7 +93,7 @@ void print_advarsel( FILE *filPointer, int tilstand)
     }
 }
 
-/* Returner værdi afhængig af BMI */
+/* Returns a value depending on BMI */
 int advarsel_BMI(double BMI)
 {
     if (BMI < 18.5)
