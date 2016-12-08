@@ -6,13 +6,6 @@
 #define MAX_INGREDIENTS 50
 #define MAX_LINE 50
 
-typedef struct nutrition 
-{
-	char  ingredient[MAX_CHARS];
-	int   kiloJoule;
-	float protein;
-} nutrition;
-
 typedef struct ingredient
 {
     char ingredient[MAX_CHARS];
@@ -20,7 +13,6 @@ typedef struct ingredient
 
 /* Prototypes */
 void retrieveIngredients();
-nutrition load_ingredient(char *ingredient, int kiloJoule, float protein);
 
 int main(void)
 {
@@ -35,7 +27,7 @@ void retrieveIngredients()
     char tempString[MAX_CHARS];
     ingredient food[MAX_INGREDIENTS];
 
-    printf("Scan your ingredients. (Type 'Exit' to exit):\n");
+    printf("Scan your ingredients. (Type 'Exit' to stop):\n");
 
     do
     {
@@ -73,17 +65,4 @@ void retrieveIngredients()
     }
 */
 
-    
 }
-
-/*
-nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
-{
-	nutrition result;
-	strcpy(result.ingredient, ingredient);
-	result.kiloJoule = kiloJoule;
-	result.protein = protein;
-
-	return result;
-}
-*/
