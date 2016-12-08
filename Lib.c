@@ -77,7 +77,7 @@ void datestamp(char output[]){
 }
 
 /* Prints a warning depending on warning_BMI's return value. */
-void print_advarsel( FILE *filPointer, int tilstand)
+void print_warning( FILE *filPointer, int tilstand)
 {
     if(tilstand == 1)
     {
@@ -94,7 +94,7 @@ void print_advarsel( FILE *filPointer, int tilstand)
 }
 
 /* Returns a value depending on BMI */
-int advarsel_BMI(double BMI)
+int warning_BMI(double BMI)
 {
     if (BMI < 18.5)
         return 1;
