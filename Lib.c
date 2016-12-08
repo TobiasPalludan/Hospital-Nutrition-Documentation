@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
 #include "Lib.h"
 
 double BMI(double height, double weight){
