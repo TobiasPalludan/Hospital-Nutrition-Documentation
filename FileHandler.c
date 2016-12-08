@@ -14,7 +14,12 @@
 #define FILE_NAME_SIZE 20
 #define LOG_FILE_SIZE 100
 
-typedef struct personInfo {
+#define FILE_PATH "patients/"
+#define INDEX_FILE_NAME "PatientIndex.txt"
+
+
+typedef struct personInfo 
+{
 	int id;
 	char department[DEPARTMENT_SIZE];
 	int cprNumber;
@@ -23,7 +28,8 @@ typedef struct personInfo {
 	/*char preferences[PREFERENCES_SIZE];*/
 }personInfo;
 
-typedef struct foodIntake {
+typedef struct foodIntake 
+{
 	int id;
 	char timeStamp[TIME_STAMP_SIZE];
 	char dishName[DISH_NAME_SIZE];
@@ -32,7 +38,8 @@ typedef struct foodIntake {
 	int percentageEaten;
 }foodIntake;
 
-typedef struct condition {
+typedef struct condition 
+{
 	int id;
 	char timeStamp[TIME_STAMP_SIZE];
 	int weight;
@@ -47,33 +54,38 @@ typedef struct condition {
 void add_food_intake(foodIntake intake);
 void add_person(personInfo person);
 void add_condition_log(condition conditionLog);
+void make_patient_folder(char *string);
 void make_folder(personInfo person);
 void save_in_file(FILE *filePtr, char string[], char fileName[]);
+void update_index_file(personInfo person);
 
 
 int main(void)
 {
-	if (_mkdir("patients") == 0)
-	{
-		printf("made folder: patients\n");
-	}
-	else printf("Folder already exists\n");
+	make_patient_folder(FILE_PATH);
+
+	/* remove this when fucntions for adding real patients is there*/
 	personInfo Casper = { 1, "Uranus", 666, "Casper", "Kris" };
 	foodIntake feedCasper = { 1, "18:18", "TUANS MOR", "White sauce", 666, 9 };
 	condition CasperErSygLog = { 1, "18:18", 17, 25, -0.15, 666, 99.9, "Kronisk diaré", "Stadig Kris" };
 	add_person(Casper);
 	add_food_intake(feedCasper);
 	add_condition_log(CasperErSygLog);
+
 	return 0;
 }
 
 void add_person(personInfo person)
 {
 	FILE *personFilePtr;
+
+	update_index_file(person);
 	make_folder(person);
-	char fileName[FILE_NAME_SIZE];
-	char log[LOG_FILE_SIZE];
-	sprintf(fileName, "patients/%d/%d ID.txt", person.id, person.id); /*Creates file name from ID of the person*/
+
+	char fileName[FILE_NAME_SIZE],
+		 log[LOG_FILE_SIZE];
+
+	sprintf(fileName, "%s/%d/%d ID.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
 	sprintf(log, "%d, %s, %d, %s, %s\n", person.id, person.department, person.cprNumber, person.name, person.allergy);
 	save_in_file(personFilePtr, log, fileName);
 }
@@ -81,9 +93,9 @@ void add_person(personInfo person)
 void add_food_intake(foodIntake intake)
 {
 	FILE *foodFilePtr;
-	char fileName[FILE_NAME_SIZE];
-	char log[LOG_FILE_SIZE];
-	sprintf(fileName, "patients/%d/%d IntakeLog.txt", intake.id, intake.id); /*Creates file name from ID of the person*/
+	char fileName[FILE_NAME_SIZE],
+		 log[LOG_FILE_SIZE];
+	sprintf(fileName, "%s/%d/%d IntakeLog.txt", FILE_PATH, intake.id, intake.id); /*Creates file name from ID of the person*/
 	sprintf(log, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
 	save_in_file(foodFilePtr, log, fileName);
 }
@@ -91,9 +103,9 @@ void add_food_intake(foodIntake intake)
 void add_condition_log(condition conditionLog)
 {
 	FILE *condtionFilePtr;
-	char fileName[FILE_NAME_SIZE];
-	char log[LOG_FILE_SIZE];
-	sprintf(fileName, "patients/%d/%d condition.txt", conditionLog.id, conditionLog.id); /*Creates file name from ID of the person*/
+	char fileName[FILE_NAME_SIZE],
+		 log[LOG_FILE_SIZE];
+	sprintf(fileName, "%s/%d/%d condition.txt", FILE_PATH, conditionLog.id, conditionLog.id); /*Creates file name from ID of the person*/
 	sprintf(log, "%d %s %d %d %lf %d %.2lf %s %s\n", conditionLog.id, conditionLog.timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.ilness, conditionLog.allergy); /*Creates file name from ID of the person*/
 	save_in_file(condtionFilePtr, log, fileName);
 }
@@ -104,8 +116,7 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 	{
 		filePtr = fopen(fileName, "a");
 		fprintf(filePtr, string);
-	}
-	else
+	} else
 	{
 		filePtr = fopen(fileName, "w");
 		fprintf(filePtr, string);
@@ -113,60 +124,37 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 	fclose(filePtr);
 }
 
-
-void make_folder(personInfo person)
+void make_patient_folder(char *string)
 {
-	char path[FILE_NAME_SIZE] = { "patients/" };
-	char idPath[FILE_NAME_SIZE];
-	itoa(person.id, idPath, 10);
-	strcat(path, idPath);
-	if (_mkdir(path)==0)
+	if (_mkdir(string) == 0)
 	{
-		printf("made folder: %d\n", person.id);
+		printf("made folder: %s\n", string);
 	}
 	else printf("Folder already exists\n");
 }
 
-/*
-void add_person(personInfo person)
+void make_folder(personInfo person)
 {
-	FILE *personFilePtr;
-	make_folder(person);
-	char fileName[FILE_NAME_SIZE];
-	sprintf(fileName, "%d/%d ID.txt", person.id, person.id);
+	char path[FILE_NAME_SIZE] = { FILE_PATH },
+		 idPath[FILE_NAME_SIZE];
 
-	char log[LOG_FILE_SIZE];
-	sprintf(log, "%d, %s, %d, %s, %s\n", person.id, person.department, person.cprNumber, person.name, person.allergy);
+	itoa(person.id, idPath, 10);
+	strcat(path, idPath);
 
-	if (personFilePtr != NULL)
+	if (_mkdir(path)==0)
 	{
-		personFilePtr = fopen(fileName, "a");
-		fprintf(personFilePtr, log);
-	}
-	else
-	{
-		personFilePtr = fopen(fileName, "w");
-		fprintf(personFilePtr, log);
-	}
-	fclose(personFilePtr);
-}*/
+		printf("made folder: %d\n", person.id);
+	} else printf("Folder already exists\n");
+}
 
-/*void add_food_intake(foodIntake intake, personInfo person)
+void update_index_file(personInfo person)
 {
-	FILE *foodFilePtr;
-	char fileName[FILE_NAME_SIZE];
-	sprintf(fileName, "%d/%d IntakeLog.txt", person.id, person.id); /*Creates file name from ID of the person*/
-/*
-	if (foodFilePtr != NULL)
-	{
-		foodFilePtr = fopen(fileName, "a");
-		fprintf(foodFilePtr, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
-	}
-	else
-	{
-		printf("File not open");
-		foodFilePtr = fopen(fileName, "w");
-		fprintf(foodFilePtr, "%s, %s, %s, %d, %d\n", intake.timeStamp, intake.dishName, intake.indgredients, intake.totalKJ, intake.percentageEaten);
-	}
-	fclose(foodFilePtr);
-}*/
+	FILE *indexFilePtr;
+	char indexInfo[NAME_SIZE],
+		 fileName[NAME_SIZE] = { FILE_PATH };
+
+	sprintf(fileName, "%s%s", fileName, INDEX_FILE_NAME);
+	sprintf(indexInfo, "%d %s %s\n", person.id, person.name, person.allergy);
+
+	save_in_file(indexFilePtr, indexInfo, fileName);
+}
