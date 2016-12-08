@@ -4,7 +4,7 @@
 
 #define MAX_LINE_LEN 50
 #define MAX_CHARS 25
-#define DATABASE 10
+#define DATABASE_DEPTH 10
 
 typedef struct nutrition 
 {
@@ -12,6 +12,12 @@ typedef struct nutrition
 	int   kiloJoule;
 	float protein;
 } nutrition;
+
+typedef struct ingredientPos
+{
+	char ingredientName[MAX_CHARS];
+	long int position;
+} ingredientPos;
 
 /* Prototypes */
 void indexDatabase(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb);
@@ -25,7 +31,7 @@ int main(void)
 	char indexFile[] = "Nutritional_index.txt";
 	int len = 0;
 	int i, j;
-	int position[DATABASE][1];
+	ingredientPos indexArr[DATABASE_DEPTH];
 	FILE *dtb, *ind;
 
 	/* Open the database file and check if open */
@@ -44,20 +50,27 @@ int main(void)
 		indexDatabase(ind, indexFile, dtb);
 	}
 	
-	//loadIndex(ind);
+	loadIndex(ind, indexArr);
 
 
 	/* Ask for ingredient */
-	/*printf("Enter the name of the ingredient that you want to retrieve information about: ");
-	scanf(" %s", &ingredient);*/
+	printf("Enter the name of the ingredient that you want to retrieve information about: ");
+	scanf(" %s", &ingredient);
 	
-	
+	/* Find database position in index file */
+
+
 	/* Pull the data from the database */
+
+
+
 	fclose(dtb);
 	fclose(ind);
 
 	return 0;
 }
+
+
 
 void indexDatabase(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb)
 {
@@ -95,6 +108,12 @@ void indexDatabase(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb)
 	} while (fgetsPtr != NULL);
 }
 
+void loadIndex(FILE *ind)
+{
+
+}
+
+/*
 nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
 {
 	nutrition result;
@@ -103,4 +122,4 @@ nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
 	result.protein = protein;
 
 	return result;
-}
+}*/

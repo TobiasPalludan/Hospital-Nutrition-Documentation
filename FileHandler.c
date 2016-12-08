@@ -25,7 +25,7 @@ typedef struct personInfo
 	int cprNumber;
 	char name[NAME_SIZE];
 	char allergy[ALLERGY_SIZE];
-	/*char preferences[PREFERENCES_SIZE];*/
+	char illness[ILNESS_SIZE];
 }personInfo;
 
 typedef struct foodIntake 
@@ -47,7 +47,7 @@ typedef struct condition
 	double bmi;
 	int bmr;
 	double temperature;
-	char ilness[ILNESS_SIZE];
+	char illness[ILNESS_SIZE];
 	char allergy[ALLERGY_SIZE];
 }condition;
 
@@ -58,16 +58,16 @@ void make_patient_folder(char *string);
 void make_folder(personInfo person);
 void save_in_file(FILE *filePtr, char string[], char fileName[]);
 void update_index_file(personInfo person);
-
+int find_index(FILE *filePtr, char fileName[]);
 
 int main(void)
 {
 	make_patient_folder(FILE_PATH);
 
 	/* remove this when fucntions for adding real patients is there*/
-	personInfo Casper = { 1, "Uranus", 666, "Casper", "Kris" };
-	foodIntake feedCasper = { 1, "18:18", "TUANS MOR", "White sauce", 666, 9 };
-	condition CasperErSygLog = { 1, "18:18", 17, 25, -0.15, 666, 99.9, "Kronisk diaré", "Stadig Kris" };
+	personInfo Casper = { 3, "Uranus", 666, "Casper", "Kris", "feber"};
+	foodIntake feedCasper = { 3, "18:18", "TUANS MOR", "White sauce", 666, 9 };
+	condition CasperErSygLog = { 3, "18:18", 17, 25, -0.15, 666, 99.9, "Kronisk diaré", "Stadig Kris" };
 	add_person(Casper);
 	add_food_intake(feedCasper);
 	add_condition_log(CasperErSygLog);
@@ -106,7 +106,7 @@ void add_condition_log(condition conditionLog)
 	char fileName[FILE_NAME_SIZE],
 		 log[LOG_FILE_SIZE];
 	sprintf(fileName, "%s/%d/%d condition.txt", FILE_PATH, conditionLog.id, conditionLog.id); /*Creates file name from ID of the person*/
-	sprintf(log, "%d %s %d %d %lf %d %.2lf %s %s\n", conditionLog.id, conditionLog.timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.ilness, conditionLog.allergy); /*Creates file name from ID of the person*/
+	sprintf(log, "%d %s %d %d %.2lf %d %.2lf %s %s\n", conditionLog.id, conditionLog.timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness, conditionLog.allergy); /*Creates file name from ID of the person*/
 	save_in_file(condtionFilePtr, log, fileName);
 }
 
@@ -154,7 +154,31 @@ void update_index_file(personInfo person)
 		 fileName[NAME_SIZE] = { FILE_PATH };
 
 	sprintf(fileName, "%s%s", fileName, INDEX_FILE_NAME);
-	sprintf(indexInfo, "%d %s %s\n", person.id, person.name, person.allergy);
+	int index = find_index(indexFilePtr, fileName);
+	sprintf(indexInfo, "%d %s %s\n", index, person.name, person.illness);
 
 	save_in_file(indexFilePtr, indexInfo, fileName);
+}
+
+int find_index(FILE *filePtr, char fileName[])
+{
+	filePtr = fopen(FILE_PATH INDEX_FILE_NAME, "r");
+	if (filePtr != NULL)
+	{
+		int index = 0, c = 0;
+		char name[NAME_SIZE];
+		char illness[NAME_SIZE];
+
+		while (!feof(filePtr))
+		{
+			fscanf(filePtr, " %d %[A-z] %[A-z]\n", &index, name, illness);
+			printf("%d \n", index);
+		}
+		fclose(filePtr);
+		return index + 1;
+	}
+	else {
+		fclose(filePtr);
+		return 1;
+	}
 }
