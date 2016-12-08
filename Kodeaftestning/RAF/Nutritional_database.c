@@ -48,8 +48,8 @@ int main(void)
 
 
 	/* Ask for ingredient */
-	printf("Enter the name of the ingredient that you want to retrieve information about: ");
-	scanf(" %s", &ingredient);
+	/*printf("Enter the name of the ingredient that you want to retrieve information about: ");
+	scanf(" %s", &ingredient);*/
 	
 	
 	/* Pull the data from the database */
@@ -67,6 +67,7 @@ void indexDatabase(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb)
 	 */
 	char tempString[MAX_LINE_LEN];
 	char *fgetsPtr;
+	int position;
 	int i;
 
 	/* Create an index file */
@@ -75,16 +76,23 @@ void indexDatabase(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb)
 	/* Database is open. We check if it's empty. If not we skip the first descriptive line */
 	fgetsPtr = fgets(tempString, MAX_LINE_LEN, dtb);
 	if(fgetsPtr == NULL) {
-		puts("The database is completely empty.")
+		puts("The database is completely empty.");
 		exit(EXIT_FAILURE);
 	}
 
-	/* We retrieve the lines in the database one by one, and work on those */
-	do 
+	/* We retrieve the lines in the database one by one */
+	do
 	{
+		/* Get the position */
+		position = ftell(dtb);
+		/* Reads a line in the database and stores the pointer to check if it's the end of file */
 		fgetsPtr = fgets(tempString, MAX_LINE_LEN, dtb);
-
-	} while (fgetsPtr != NULL)
+		if(fgetsPtr == NULL)
+			break;
+		/* Takes the name of the ingredient and stores it in the index */
+		sscanf(tempString, " %[^0-9]", tempString);
+		fprintf(ind, "%d: %s\n", position, tempString);
+	} while (fgetsPtr != NULL);
 }
 
 nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
