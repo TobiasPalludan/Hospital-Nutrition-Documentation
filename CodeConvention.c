@@ -1,7 +1,7 @@
 /*
  * Her er en beskrivelse, som alle elsker at se.
  * På dette sted beskriver vi, hvad denne header fil gør.
- * Vi bruger tabs til indentation. Standard size er 4, men det står frit for, at 
+ * Vi bruger tabs til indentation. Standard size er 4, men det står frit for, at
  * ændre dette individuelt.
  *
  * Altid stort begyndelsesbogstav i kommentarer, og sørg for punktum i multiline comments.
@@ -14,7 +14,7 @@
 
 /*
  * Dette er en multiline comment.
- * 
+ *
  * Maks linjelængde er 100 characters. Derfor skal kommentarer gerne stå før det de
  * beskriver.
  *
@@ -33,7 +33,7 @@
 /* Definitioner er ALL CAPS og adskilt med _underscore */
 #define MAX_ARR_SIZE 50
 
-int main (void) 
+int main (void)
 {
 	/*
 	 * Navne på variabler bruger camelCase, og er uden underscore. Globale variabler er
@@ -58,17 +58,17 @@ int main (void)
  * Vær særligt opmærksom på @param og @result, som muliggør Doxygen senere.
  * Også selv om, at de (som i det her tilfælde) er ret obvious.
  *
- * Før hver funktion gives desuden en beskrivelse som følger: 
+ * Før hver funktion gives desuden en beskrivelse som følger:
  */
 
 /*
  * Denne funktion beder brugeren om at indtaste koordinater, og gemmer disse i et array.
- * 
+ *
  * @param coordinateArr is where we store the points that is entered.
  *
  * @return noPointsCreated returns the number of points that were created.
  */
-int ask_for_coordinates(int coordinateArr[]) 
+int ask_for_coordinates(int coordinateArr[])
 { /* Bemærk bracket */
 	/* Code prompting for coordinates */
 
@@ -98,7 +98,7 @@ int ask_for_coordinates(int coordinateArr[])
 		/* One line of code */
 
 	/* Print statement, hvor parametre er på nye linjer. */
-	printf("KDhwekdkwodjawoj %d %d %d %d\n", 
+	printf("KDhwekdkwodjawoj %d %d %d %d\n",
 		    etMegetLangtArrayNavn[0].etAndetMegetLangtNavn,
 		    etVirkeligLangtNavn[0].detErDaHeltUtroligtMedDeNavne);
 
@@ -116,8 +116,8 @@ void function_with_many_parameters( int xCoordinate, int yCoordinate, long veryL
  */
 
 /*
-Good luck to us: 
-"Whenever you think, “This code needs a comment” follow that thought with, 
+Good luck to us:
+"Whenever you think, “This code needs a comment” follow that thought with,
 “How could I modify the code so its purpose is obvious?”
 Talk with your code, not your comments."
 
@@ -128,53 +128,4 @@ https://improvingsoftware.com/2011/06/27/5-best-practices-for-commenting-your-co
 UCL - Good Programming Practice (presentation)
 http://www.ucl.ac.uk/~ucappgu/seminars/good-practice.pdf
 
-
-   _____              .___       ___.                             
-  /     \ _____     __| _/____   \_ |__ ___.__. /\                
- /  \ /  \\__  \   / __ |/ __ \   | __ <   |  | \/                
-/    Y    \/ __ \_/ /_/ \  ___/   | \_\ \___  | /\                
-\____|__  (____  /\____ |\___  >  |___  / ____| \/                
-        \/     \/      \/    \/       \/\/                        
-___________                                                       
-\__    ___/_ _______    ____                                      
-  |    | |  |  \__  \  /    \                                     
-  |    | |  |  // __ \|   |  \                                    
-  |____| |____/(____  /___|  /                                    
-                    \/     \/                                     
-   _____  .__ __    __          .__                               
-  /     \ |__|  | _|  | __ ____ |  |                              
- /  \ /  \|  |  |/ /  |/ // __ \|  |                              
-/    Y    \  |    <|    <\  ___/|  |__                            
-\____|__  /__|__|_ \__|_ \\___  >____/                            
-        \/        \/    \/    \/                                  
- ____  __.      .__          __          _____  _____             
-|    |/ _|______|__| _______/  |_  _____/ ____\/ ____\___________ 
-|      < \_  __ \  |/  ___/\   __\/  _ \   __\\   __\/ __ \_  __ \
-|    |  \ |  | \/  |\___ \  |  | (  <_> )  |   |  | \  ___/|  | \/
-|____|__ \|__|  |__/____  > |__|  \____/|__|   |__|  \___  >__|   
-        \/              \/                               \/       
- ____  __.                                                        
-|    |/ _|____    ____________   ___________                      
-|      < \__  \  /  ___/\____ \_/ __ \_  __ \                     
-|    |  \ / __ \_\___ \ |  |_> >  ___/|  | \/                     
-|____|__ (____  /____  >|   __/ \___  >__|                        
-        \/    \/     \/ |__|        \/                            
-     ____.                  ___.                                  
-    |    |____    ____  ____\_ |__                                
-    |    \__  \ _/ ___\/  _ \| __ \                               
-/\__|    |/ __ \\  \__(  <_> ) \_\ \                              
-\________(____  /\___  >____/|___  /                              
-              \/     \/          \/                               
-_________                                                         
-\_   ___ \  ____ _____________ _______ ___.__.                    
-/    \  \/_/ __ \\___   /\__  \\_  __ <   |  |                    
-\     \___\  ___/ /    /  / __ \|  | \/\___  |                    
- \______  /\___  >_____ \(____  /__|   / ____|                    
-        \/     \/      \/     \/       \/                         
-___________   ___.   .__                                          
-\__    ___/___\_ |__ |__|____    ______                           
-  |    | /  _ \| __ \|  \__  \  /  ___/                           
-  |    |(  <_> ) \_\ \  |/ __ \_\___ \                            
-  |____| \____/|___  /__(____  /____  >                           
-                   \/        \/     \/ 
 */
