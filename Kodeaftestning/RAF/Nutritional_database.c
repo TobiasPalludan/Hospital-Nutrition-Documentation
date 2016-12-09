@@ -32,12 +32,6 @@ int main(void)
 	/* Ask for ingredient */
 	//retrieveIngredients();
 
-	
-	/* Find database position in index file */
-
-
-	/* Pull the data from the database */
-
 	return 0;
 }
 
