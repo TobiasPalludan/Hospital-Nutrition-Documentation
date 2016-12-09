@@ -21,8 +21,7 @@ typedef struct ingredientPos
 
 /* Prototyper */
 void initialise_nutritional_database();
-void index_database(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb, 
-					int *indLen, ingredientPos *indexArr);
+void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
 //nutrition load_ingredient(char *ingredient, int kiloJoule, float protein);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
 
@@ -38,11 +37,10 @@ int main(void)
 void initialise_nutritional_database() {
 	/* Variable initialisation */
 	char ingredient[MAX_CHARS];
-	char dataFile[] = "ANutritional_database.txt";
-	char indexFile[] = "Nutritional_index.txt";
+	char dataFile[] = "Nutritional_database.txt";
 	int len = 0, indLen = 0;
-	ingredientPos indexArr[DATABASE_DEPTH];
-	FILE *dtb, *ind;
+	ingredientPos *indexArr = malloc(DATABASE_DEPTH * sizeof(ingredientPos));
+	FILE *dtb;
 
 	/* Open the database file and check if open */
 	dtb = fopen(dataFile, "r+");
@@ -52,22 +50,14 @@ void initialise_nutritional_database() {
 		exit(EXIT_FAILURE);
 	}
 
-	/* Open the index file, or index the database if no file is present */
-	ind = fopen(indexFile, "r");
-	if(ind == NULL)
-	{
-		puts("Could not find index file. Creating one...");
-		index_database(ind, indexFile, dtb, &indLen, indexArr);
-	} else {
-		load_index(ind, indexArr, indLen);
-	}
+	/* Index the database */
+	index_database(dtb, &indLen, indexArr);
 
 	fclose(dtb);
-	fclose(ind);
+	free(indexArr);
 }
 
-void index_database(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb, 
-					int *indLen, ingredientPos *indexArr)
+void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 {
 	/* 
 	 * Only reached if no index file is currently present.
@@ -78,8 +68,7 @@ void index_database(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb,
 	int position;
 	int i;
 
-	/* Create an index file */
-	ind = fopen(indexFile, "w");
+	puts("Loading index.");
 
 	/* Database is open. We check if it's empty. If not we skip the first descriptive line */
 	fgetsPtr = fgets(tempString, MAX_LINE_LEN, dtb);
@@ -106,30 +95,7 @@ void index_database(FILE *ind, char indexFile[MAX_CHARS], FILE *dtb,
 	} while (fgetsPtr != NULL);
 
 	for(i = 0; i < *indLen; i++) 
-		fprintf(ind, "%d: %s\n", indexArr[i].position, indexArr[i].ingredientName);
-	
-	/* Closing the index file for writing, and reopen for the rest of the functions to read it */
-	freopen(indexFile, "r", ind);
-}
-
-void load_index(FILE *ind, ingredientPos *indexArr, int indLen)
-{
-	int posLen = 10, i = 0;
-	char *fgetsPtr;
-	/* Name of the ingredient + 10 for the position */
-	char tempString[MAX_CHARS + posLen];
-
-	do
-	{
-		fgetsPtr = fgets(tempString, MAX_CHARS + posLen, ind);
-		if (fgetsPtr == NULL)
-			break;
-
-		sscanf(tempString, " %ld : %[^\0]", &indexArr[i].position, indexArr[i].ingredientName);
-
-		i++;
-
-	} while(fgetsPtr != NULL);
+		printf("%d: %s\n", indexArr[i].position, indexArr[i].ingredientName);
 }
 
 /*
