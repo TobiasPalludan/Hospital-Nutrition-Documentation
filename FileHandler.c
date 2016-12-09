@@ -7,7 +7,7 @@
 #define NAME_SIZE 30
 #define ALLERGY_SIZE 50
 #define PREFERENCES_SIZE 100
-#define ILNESS_SIZE 100
+#define ILLNESS_SIZE 100
 #define TIME_STAMP_SIZE 13
 #define DISH_NAME_SIZE 20
 #define INGREDIENTS_SIZE 100
@@ -25,7 +25,7 @@ typedef struct personInfo
 	int cprNumber;
 	char name[NAME_SIZE];
 	char allergy[ALLERGY_SIZE];
-	char illness[ILNESS_SIZE];
+	char illness[ILLNESS_SIZE];
 }personInfo;
 
 typedef struct foodIntake 
@@ -47,7 +47,7 @@ typedef struct condition
 	double bmi;
 	int bmr;
 	double temperature;
-	char illness[ILNESS_SIZE];
+	char illness[ILLNESS_SIZE];
 	char allergy[ALLERGY_SIZE];
 }condition;
 
@@ -62,12 +62,12 @@ int find_index(FILE *filePtr, char fileName[]);
 
 int main(void)
 {
-	make_patient_folder(FILE_PATH);
+	make_patient_folder(FILE_PATH);/*Maybe move this to either add_person() function, or the main of the  */
 
 	/* remove this when fucntions for adding real patients is there*/
-	personInfo Casper = { 3, "Uranus", 666, "Casper", "Kris", "feber"};
-	foodIntake feedCasper = { 3, "18:18", "TUANS MOR", "White sauce", 666, 9 };
-	condition CasperErSygLog = { 3, "18:18", 17, 25, -0.15, 666, 99.9, "Kronisk diaré", "Stadig Kris" };
+	personInfo Casper = { 3, "afdeling 1", 1110954441, "Casper", "graes", "feber"};
+	foodIntake feedCasper = { 3, "18:18", "Kartofler", "kartofler", 2000, 75 };
+	condition CasperErSygLog = { 3, "18:18", 70, 192, 23.1, 2400, 41.7, "feber", "graes" };
 	add_person(Casper);
 	add_food_intake(feedCasper);
 	add_condition_log(CasperErSygLog);
@@ -75,7 +75,7 @@ int main(void)
 	return 0;
 }
 
-void add_person(personInfo person)
+void add_person(personInfo person)/*Function for adding a person the the system */
 {
 	FILE *personFilePtr;
 
@@ -86,7 +86,7 @@ void add_person(personInfo person)
 		 log[LOG_FILE_SIZE];
 
 	sprintf(fileName, "%s/%d/%d ID.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
-	sprintf(log, "%d, %s, %d, %s, %s\n", person.id, person.department, person.cprNumber, person.name, person.allergy);
+	sprintf(log, "%d, %s, %d, %s, %s\n", person.id, person.department, person.cprNumber, person.name, person.allergy);/*Pulls log indformation from stuct*/
 	save_in_file(personFilePtr, log, fileName);
 }
 
@@ -110,7 +110,7 @@ void add_condition_log(condition conditionLog)
 	save_in_file(condtionFilePtr, log, fileName);
 }
 
-void save_in_file(FILE *filePtr, char string[], char fileName[])
+void save_in_file(FILE *filePtr, char string[], char fileName[]) /* Saves string in a file, or makes the file if its not already there. Takes filePointer, a string, and a fileName */
 {
 	if (filePtr != NULL)
 	{
@@ -124,7 +124,7 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 	fclose(filePtr);
 }
 
-void make_patient_folder(char *string)
+void make_patient_folder(char *string) /* Creates the main folder to store all patient subfolders */
 {
 	if (_mkdir(string) == 0)
 	{
@@ -133,7 +133,7 @@ void make_patient_folder(char *string)
 	else printf("Folder already exists\n");
 }
 
-void make_folder(personInfo person)
+void make_folder(personInfo person) /* Makes patient subfolders */
 {
 	char path[FILE_NAME_SIZE] = { FILE_PATH },
 		 idPath[FILE_NAME_SIZE];
@@ -147,22 +147,22 @@ void make_folder(personInfo person)
 	} else printf("Folder already exists\n");
 }
 
-void update_index_file(personInfo person)
+void update_index_file(personInfo person) /* Updates the index file that tracks all the patients*/
 {
 	FILE *indexFilePtr;
-	char indexInfo[NAME_SIZE],
-		 fileName[NAME_SIZE] = { FILE_PATH };
+	char indexLog[NAME_SIZE],
+		 fileName[NAME_SIZE];
 
-	sprintf(fileName, "%s%s", fileName, INDEX_FILE_NAME);
+	sprintf(fileName, "%s%s", FILE_PATH, INDEX_FILE_NAME);
 	int index = find_index(indexFilePtr, fileName);
-	sprintf(indexInfo, "%d %s %s\n", index, person.name, person.illness);
+	sprintf(indexLog, "%d %s %s\n", index, person.name, person.illness);
 
-	save_in_file(indexFilePtr, indexInfo, fileName);
+	save_in_file(indexFilePtr, indexLog, fileName);
 }
 
 int find_index(FILE *filePtr, char fileName[])
 {
-	filePtr = fopen(FILE_PATH INDEX_FILE_NAME, "r");
+	filePtr = fopen(fileName, "r");
 	if (filePtr != NULL)
 	{
 		int index = 0, c = 0;
