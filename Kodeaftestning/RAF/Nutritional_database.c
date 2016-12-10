@@ -138,13 +138,17 @@ void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX]){
 
 	printf("\nPrinted:\n");
 
-	for (i = 0; i < counter; i++){
+	for (i = 0; i < counter; i++)
+	{
 		printf("%s\n", foodArr[i].ingredient);
 	}
 
-	for (i = 0; i < counter; i++){
-		for (j = 0; j < tempCounter; j++){
-			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredient)){
+	for (i = 0; i < counter; i++)
+	{
+		for (j = 0; j < tempCounter; j++)
+		{
+			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredient))
+			{
 				printf("%s\n", indexArr[j].ingredientName);
 			}
 		}
@@ -154,7 +158,8 @@ void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX]){
 
 void search(ingredient a, ingredientPos b)
 {
-	if (strstr(b.ingredientName, a.ingredient)){
+	if (strstr(b.ingredientName, a.ingredient))
+	{
 		printf("%s\n", b.ingredientName);
 	}
 }
