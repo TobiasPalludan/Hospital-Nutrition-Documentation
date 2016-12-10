@@ -13,19 +13,19 @@ typedef struct ingredient
 
 /* Prototypes */
 void retrieveIngredients();
+void searchFunction();
 
 int main(void)
 {
-    retrieveIngredients();
+    ingredient_prompt();
 
     return 0;
 }
 
-void retrieveIngredients()
-{
-    int i = 0, counter = 0;
+void ingredient_prompt(){
+	int i = 0, counter = 0;
     char tempString[MAX_CHARS];
-    ingredient food[MAX_INGREDIENTS];
+    ingredient food[MAX_LINE_LEN];
 
     printf("Scan your ingredients. (Type 'Exit' to stop):\n");
 
@@ -37,32 +37,23 @@ void retrieveIngredients()
         counter++;
 
         if (strcmp(tempString, "Exit") == 0)
-        {
             counter--;
-        }
-        
+            
     } while (strcmp(tempString, "Exit") != 0);
 
-    printf("\nThe ingredients printed:\n");
-    for (i = 0; i < counter; i++){
-        printf("%s\n", food[i].ingredient); 
-    }
+	search(counter);
+}
 
-/*
-    printf("How many ingredients do you want to input: ");
-    scanf(" %d", &temp);
-*/
+void search(int counter)
+{
+	int i = 0, j = 0;
+    char *food;
 
-/*
-    for (i = 0; i < temp; i++)    {
-        scanf(" %s %d %f", &ingredient, &kiloJoule, &protein);
-        load_ingredient(&ingredient, kiloJoule, protein);
-    }
-
-    for (i = 0; i < temp; i++)
-    {
-        printf("%s %d %f\n", load_ingredient[i].ingredient, load_ingredient[i].kiloJoule, load_ingredient[i].protein);
-    }
-*/
-
+	for(i = 0; i < counter; i++){
+		for(j = 0; j < ; j++){
+			if (food = strstr(food[i].ingredient, indexArr.ingredientName) != NULL){
+				printf("%s\n", indexArr[j].ingredientName);
+			}
+		}
+	}
 }

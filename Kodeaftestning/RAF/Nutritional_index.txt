@@ -1,11 +1,11 @@
-40: Potato, boiled		
-71: Apple, raw		
-98: Cucumber, raw		
-127: Banana, raw		
-155: Orange, raw		
-183: Beef, raw		
-210: Chicken breast, boiled	
-249: Salmon, raw		
-278: Spring onion, raw	
-311: Pasta, boiled		
-341: Brown rice, raw		
+39: Potato, boiled		
+69: Apple, raw		
+95: Cucumber, raw		
+123: Banana, raw		
+150: Orange, raw		
+177: Beef, raw		
+203: Chicken breast, boiled	
+241: Salmon, raw		
+269: Spring onion, raw	
+301: Pasta, boiled		
+330: Brown rice, raw		
