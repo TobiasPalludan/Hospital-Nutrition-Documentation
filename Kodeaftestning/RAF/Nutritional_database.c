@@ -117,7 +117,8 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 		printf("%d: %s\n", indexArr[i].position, indexArr[i].ingredientName);
 }
 
-void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX]){
+void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX])
+{
 	int i = 0, j = 0, counter = 0;
     char tempString[MAX_CHARS];
     ingredient foodArr[MAX_LINE_LEN];
@@ -155,7 +156,7 @@ void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX]){
 	}
 }
 
-
+/*
 void search(ingredient a, ingredientPos b)
 {
 	if (strstr(b.ingredientName, a.ingredient))
@@ -163,6 +164,7 @@ void search(ingredient a, ingredientPos b)
 		printf("%s\n", b.ingredientName);
 	}
 }
+*/
 
 /*
 nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
