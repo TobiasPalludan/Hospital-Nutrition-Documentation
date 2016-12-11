@@ -28,7 +28,7 @@ typedef struct ingredient
 } ingredient;
 
 /* Prototypes */
-ingredientPos initialise_nutritional_database(int *p_counter);
+ingredientPos* initialise_nutritional_database(int *p_counter);
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
 //nutrition load_ingredient(char *ingredient, int kiloJoule, float protein);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
@@ -41,9 +41,9 @@ int main(void)
 	int tempCounter;
 	p_counter = &tempCounter;
 
-	ingredientPos indexArr[MAX_INDEX];
+	ingredientPos *indexArr;
 
-	initialise_nutritional_database(p_counter);
+	indexArr = initialise_nutritional_database(p_counter);
 	/* Ask for ingredient */
 	ingredient_prompt(tempCounter, indexArr);
 	//retrieveIngredients();
@@ -51,7 +51,7 @@ int main(void)
 	return 0;
 }
 
-ingredientPos initialise_nutritional_database(int *p_counter) {
+ingredientPos* initialise_nutritional_database(int *p_counter) {
 	/* Variable initialisation */
 	char ingredient[MAX_CHARS];
 	char dataFile[] = "Nutritional_database.txt";
@@ -73,7 +73,7 @@ ingredientPos initialise_nutritional_database(int *p_counter) {
 	fclose(dtb);
 	free(indexArr);
 
-	return *indexArr;
+	return indexArr;
 }
 
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
