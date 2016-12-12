@@ -21,6 +21,7 @@ typedef struct graphSet
 
 void produce_graph( graphSet *test );
 int diff_in_days( tm start_date, tm end_date );
+void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels);
 
 int main (void)
 {
@@ -33,6 +34,12 @@ int main (void)
 	test[2].coorTime.tm_mday = 23; test[2].coorTime.tm_mon = 0; test[2].coorTime.tm_year = 116;
 	test[3].coorTime.tm_mday = 24; test[3].coorTime.tm_mon = 0; test[3].coorTime.tm_year = 116;
 	test[4].coorTime.tm_mday = 25; test[4].coorTime.tm_mon = 0; test[4].coorTime.tm_year = 116;
+
+	test[0].kJEaten = 0;
+	test[1].kJEaten = 20;
+	test[2].kJEaten = 40;
+	test[3].kJEaten = 60;
+	test[4].kJEaten = 100;
 
 
 	produce_graph(test);
@@ -47,27 +54,28 @@ void produce_graph( graphSet *test )
 	FILE *image_file;
 	int r, g, b;
 	int diff;
-	int dens, dens2;
+	int dens, margin = 20;
 
 	diff = diff_in_days(test[0].coorTime, test[4].coorTime);
 	printf("%d\n", diff);
 	dens  = lPixels / (diff + 1);
-	dens2 = lPixels / diff;
 
 
-	image_file = fopen("graphTest.pnm", "wb");
+	/*image_file = fopen("graphTest.pnm", "wb");
 
 	fputs("P6\n", image_file); 
 	fprintf(image_file, "%d %d\n", hPixels, lPixels);
-	fputs("255\n", image_file);
+	fputs("255\n", image_file);*/
 
-	for(i = 1; i <= hPixels; i++)
+	determineCoorset(test, dens, hPixels, lPixels);
+
+	/*for(i = 1; i <= hPixels; i++)
 	{
 		for(u = 1; u <= lPixels; u++)
 		{
 			r = 255; g = 255; b = 255;
 			if(245 < i && i <= 256) {
-				if (dens2 - (u % dens2) <= 6 || dens2 - (u % dens2) > dens2 - 5) {
+				if ( || dens2 - (u % dens2) > dens2 - 5) {
 					r = 255; g = 0; b = 0;
 				}
 			}
@@ -76,7 +84,7 @@ void produce_graph( graphSet *test )
 			fputc(g, image_file);
 			fputc(b, image_file);
 		}
-	}
+	}*/
 }
 
 int diff_in_days( tm start_date, tm end_date )
@@ -98,4 +106,28 @@ int diff_in_days( tm start_date, tm end_date )
 	printf ("%d days difference\n", dayDiff);
 
 	return dayDiff;
+}
+
+void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels)
+{
+	int biggestKJ = test[0].kJEaten;
+	int smallestKJ = test[0].kJEaten;
+	int log;
+
+	for(int i = 0; i < 5; i++)
+	{
+		if(biggestKJ < test[i].kJEaten)
+			biggestKJ = test[i].kJEaten;
+		if (smallestKJ > test[i].kJEaten)
+			smallestKJ = test[i].kJEaten;
+	}
+
+	log = log10(biggestKJ);
+
+	for(int i = 0; i < 5; i++)
+	{
+		printf("Log: %d\n", log);
+		int value = (hPixels * (biggestKJ - smallestKJ)) / (100 * pow(10, log)) * test[i].kJEaten;
+		printf("Entry: %d. PixelPos: %d. Value: %d\n", i, value, test[i].kJEaten);
+	}
 }
