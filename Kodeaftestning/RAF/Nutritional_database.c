@@ -26,6 +26,7 @@ typedef struct ingredientPos
 typedef struct searchTerm
 {
     char ingredientName[MAX_CHARS];
+    long int position;
 } searchTerm;
 
 /* Prototypes */
@@ -47,6 +48,7 @@ int main(void)
 	ingredient_prompt(indLen, indexArr);
 	//retrieveIngredients();
 	free(indexArr);
+	fclose(dtb);
 
 	return 0;
 }
@@ -68,8 +70,6 @@ ingredientPos* initialise_nutritional_database(int *indLen) {
 
 	/* Index the database */
 	index_database(dtb, indLen, indexArr);
-
-	fclose(dtb);
 
 	return indexArr;
 }
@@ -159,7 +159,9 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 		{
 			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
+				foodArr[i].position = indexArr[j].position;
 				printf("%s\n", indexArr[j].ingredientName);
+				fscanf(dtb, "%[^0-9] %d %f %*f \n", )
 			}
 
 		}
