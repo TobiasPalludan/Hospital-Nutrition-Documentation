@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MAX_LINE_LEN 50
 #define MAX_CHARS 25
@@ -22,38 +23,38 @@ typedef struct ingredientPos
 	long int position;
 } ingredientPos;
 
-typedef struct ingredient
+typedef struct searchTerm
 {
-    char ingredient[MAX_CHARS];
-} ingredient;
+    char ingredientName[MAX_CHARS];
+} searchTerm;
 
 /* Prototypes */
-ingredientPos* initialise_nutritional_database(int *p_counter);
+ingredientPos* initialise_nutritional_database(int *indLen);
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
 //nutrition load_ingredient(char *ingredient, int kiloJoule, float protein);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
-void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX]);
-void search(ingredient a, ingredientPos b);
+void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX]);
+void stringarrToLowercase(char *stringArr);
 
 int main(void)
 {
-	int tempCounter;
+	int indLen = 0;
 
 	ingredientPos *indexArr;
 
-	indexArr = initialise_nutritional_database(&tempCounter);
+	indexArr = initialise_nutritional_database(&indLen);
 	/* Ask for ingredient */
-	ingredient_prompt(tempCounter, indexArr);
+	ingredient_prompt(indLen, indexArr);
 	//retrieveIngredients();
+	free(indexArr);
 
 	return 0;
 }
 
-ingredientPos* initialise_nutritional_database(int *p_counter) {
+ingredientPos* initialise_nutritional_database(int *indLen) {
 	/* Variable initialisation */
 	char ingredient[MAX_CHARS];
 	char dataFile[] = "Nutritional_database.txt";
-	int len = 0, indLen = 0;
 	ingredientPos *indexArr = malloc(DATABASE_DEPTH * sizeof(ingredientPos));
 	FILE *dtb;
 
@@ -66,12 +67,9 @@ ingredientPos* initialise_nutritional_database(int *p_counter) {
 	}
 
 	/* Index the database */
-	index_database(dtb, &indLen, indexArr);
-
-	p_counter = &indLen;
+	index_database(dtb, indLen, indexArr);
 
 	fclose(dtb);
-	free(indexArr);
 
 	return indexArr;
 }
@@ -117,38 +115,49 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 		printf("%d: %s\n", indexArr[i].position, indexArr[i].ingredientName);
 }
 
-void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX])
+void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 {
-	int i = 0, j = 0, counter = 0;
+	int i = 0, j = 0, searchTermCounter = 0;
     char tempString[MAX_CHARS];
-    ingredient foodArr[MAX_LINE_LEN];
+    searchTerm foodArr[MAX_LINE_LEN];
 
     printf("Scan your ingredients. (Type 'Exit' to stop):\n");
 
     do
     {
         scanf(" %s", tempString);
-        strcpy(foodArr[i].ingredient, tempString);
+        strcpy(foodArr[i].ingredientName, tempString);
         i++;
-        counter++;
+        searchTermCounter++;
 
         if (strcmp(tempString, "Exit") == 0)
-            counter--;
+            searchTermCounter--;
         
     } while (strcmp(tempString, "Exit") != 0);
 
+
+	for(i = 0; i < searchTermCounter; i++)
+	{
+		stringarrToLowercase(foodArr[i].ingredientName);
+	}
+	for(i = 0; i < indLen; i++)
+	{
+		stringarrToLowercase(indexArr[i].ingredientName);
+	}
+	
 	printf("\nPrinted:\n");
 
-	for (i = 0; i < counter; i++)
+	for (i = 0; i < searchTermCounter; i++)
 	{
-		printf("%s\n", foodArr[i].ingredient);
+		printf("%s\n", foodArr[i].ingredientName);
 	}
+	
 
-	for (i = 0; i < counter; i++)
+	for (i = 0; i < searchTermCounter; i++)
 	{
-		for (j = 0; j < tempCounter; j++)
+		for (j = 0; j < indLen; j++)
 		{
-			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredient) != 0)
+			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
 				printf("%s\n", indexArr[j].ingredientName);
 			}
@@ -157,15 +166,13 @@ void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX])
 	}
 }
 
-/*
-void search(ingredient a, ingredientPos b)
+void stringarrToLowercase(char *string)
 {
-	if (strstr(b.ingredientName, a.ingredient))
+	for(int i = 0; i < strlen(string); i++)
 	{
-		printf("%s\n", b.ingredientName);
+		string[i] = tolower(string[i]);
 	}
 }
-*/
 
 /*
 nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
