@@ -37,13 +37,11 @@ void search(ingredient a, ingredientPos b);
 
 int main(void)
 {
-	int *p_counter;
 	int tempCounter;
-	p_counter = &tempCounter;
 
 	ingredientPos *indexArr;
 
-	indexArr = initialise_nutritional_database(p_counter);
+	indexArr = initialise_nutritional_database(&tempCounter);
 	/* Ask for ingredient */
 	ingredient_prompt(tempCounter, indexArr);
 	//retrieveIngredients();
@@ -69,6 +67,8 @@ ingredientPos* initialise_nutritional_database(int *p_counter) {
 
 	/* Index the database */
 	index_database(dtb, &indLen, indexArr);
+
+	p_counter = &indLen;
 
 	fclose(dtb);
 	free(indexArr);
@@ -148,10 +148,11 @@ void ingredient_prompt(int tempCounter, ingredientPos indexArr[MAX_INDEX])
 	{
 		for (j = 0; j < tempCounter; j++)
 		{
-			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredient))
+			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredient) != 0)
 			{
 				printf("%s\n", indexArr[j].ingredientName);
 			}
+
 		}
 	}
 }
