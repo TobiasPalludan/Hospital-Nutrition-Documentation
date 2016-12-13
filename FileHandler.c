@@ -20,7 +20,7 @@
 #define INDEX_FILE_NAME "PatientIndex.txt"
 
 
-typedef struct personInfo 
+typedef struct personInfo /* Struct for containing information for a person in the system */
 {
 	int id;
 	char department[DEPARTMENT_SIZE];
@@ -35,7 +35,7 @@ typedef struct personInfo
 	double temperature;
 }personInfo;
 
-typedef struct nutritionIntake
+typedef struct nutritionIntake /* struck for adding a nutrition intake to a intake history */
 {
 	char  ingredient[INGREDIENTS_SIZE];
 	int   kiloJoule;
@@ -43,7 +43,7 @@ typedef struct nutritionIntake
 	int	  amount;
 } nutritionIntake;
 
-typedef struct conditionHistory 
+typedef struct conditionHistory /* struct for adding a condition log to a condition history */
 {
 	int weight;
 	int height;
@@ -65,8 +65,7 @@ int find_index(FILE *filePtr, char fileName[]);
 
 int main(void)
 {
-	make_patient_folder(FILE_PATH);/*Maybe move this to either add_person() function, or the main of the  */
-
+	
 	/* remove this when fucntions for adding real patients is there*/
 	personInfo Casper = { 3, "afdeling 1", 1110954441, "Casper", "graes", "feber"};
 
@@ -84,10 +83,11 @@ int main(void)
 	return 0;
 }
 
-void add_person(personInfo *person)/*Function for adding a person the the system */
-{
+void add_person(personInfo *person)		/* Function for adding a person the the system      */
+{										/* Calls the function for creating the index aswell */
 	FILE *personFilePtr;
 
+	make_patient_folder(FILE_PATH);
 	update_index_file(person);
 	make_folder(*person);
 
@@ -99,7 +99,7 @@ void add_person(personInfo *person)/*Function for adding a person the the system
 	save_in_file(personFilePtr, log, fileName);
 }
 
-void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food intake to their patientfile */
+void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food intake to the patientfile */
 {
 
 	/* NEEDS A FIX! needs the size of the "nutritionIntake" array to work! either from as a parameter or as an element in the array!*/
@@ -112,18 +112,20 @@ void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food
 
 	datestamp(timeStamp);
 	/* int a = sizeof(nutritionIntake) / sizeof(intake[0]); */
+	/* printf("size of struct arr %d\n", a); */
+
 	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
 	printf("%s\n", fileName);
 
 	for (int i = 0; i < 3; i++)
 	{
-		if (i == 0)
+		if (i == 0)					/* Print the dish name,total nutrition, and a timestamp */
 		{
 			printf("first");
 			sprintf(log, "%19s  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
 			save_in_file(foodFilePtr, log, fileName);
 		}
-		else
+		else						/* Print the engredients of the dish */
 		{
 			sprintf(log, "                     | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
 			save_in_file(foodFilePtr, log, fileName);
@@ -131,7 +133,7 @@ void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food
 	}
 }
 
-void add_condition_log(personInfo person, conditionHistory conditionLog)
+void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds a contition log to the log file. */
 {
 	FILE *condtionFilePtr;
 	char fileName[FILE_NAME_SIZE],
@@ -146,12 +148,12 @@ void add_condition_log(personInfo person, conditionHistory conditionLog)
 
 void save_in_file(FILE *filePtr, char string[], char fileName[]) /* Saves string in a file, or makes the file if its not already there. Takes filePointer, a string, and a fileName */
 {
-	if (filePtr != NULL)
+	if (filePtr != NULL)				/* appends to file if it exist */
 	{
 		printf("appended %s\n", fileName);
 		filePtr = fopen(fileName, "a");
 		fprintf(filePtr, string);
-	} else
+	} else								/* If the file does not exist, a new one is made */
 	{
 		printf("made %s\n", fileName);
 		filePtr = fopen(fileName, "w");
@@ -160,7 +162,7 @@ void save_in_file(FILE *filePtr, char string[], char fileName[]) /* Saves string
 	fclose(filePtr);
 }
 
-void make_patient_folder(char *string) /* Creates the main folder to store all patient subfolders */
+void make_patient_folder(char *string)		/* Creates the main folder to store all patient subfolders */
 {
 	if (_mkdir(string) == 0)
 	{
@@ -169,21 +171,21 @@ void make_patient_folder(char *string) /* Creates the main folder to store all p
 	else printf("Folder already exists\n");
 }
 
-void make_folder(personInfo person) /* Makes patient subfolders */
+void make_folder(personInfo person)			/* Makes patient subfolders */
 {
 	char path[FILE_NAME_SIZE] = { FILE_PATH },
 		 idPath[FILE_NAME_SIZE];
 
-	itoa(person.id, idPath, 10);
+	itoa(person.id, idPath, 10);			/* Converts a number to a string (needed for the _mkdir because it needs a string) */
 	strcat(path, idPath);
 
 	if (_mkdir(path)==0)
 	{
-		printf("made folder: %d\n", person.id);
+		printf("made folder: %s\n", path);
 	} else printf("Folder already exists\n");
 }
 
-void update_index_file(personInfo *person) /* Updates the index file that tracks all the patients*/
+void update_index_file(personInfo *person)	/* Updates the index file that tracks all the patients */
 {
 	FILE *indexFilePtr;
 	char indexLog[NAME_SIZE],
@@ -197,7 +199,7 @@ void update_index_file(personInfo *person) /* Updates the index file that tracks
 	save_in_file(indexFilePtr, indexLog, fileName);
 }
 
-int find_index(FILE *filePtr, char fileName[])
+int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest index number */
 {
 	filePtr = fopen(fileName, "r");
 	if (filePtr != NULL)
@@ -208,7 +210,7 @@ int find_index(FILE *filePtr, char fileName[])
 
 		while (!feof(filePtr))
 		{
-			fscanf(filePtr, " %d %[A-z] %[A-z]\n", &index, name, illness);
+			fscanf(filePtr, " %d %[A-z] %[A-z]\n", &index, name, illness); /* Scans index file for the heigest index assuming the heigst index is last */
 			printf("%d \n", index);
 		}
 		fclose(filePtr);
