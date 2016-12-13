@@ -34,7 +34,7 @@ typedef struct searchTerm
 ingredientPos* initialise_nutritional_database(int *indLen);
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
-void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX]);
+nutrition* ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX]);
 void stringarrToLowercase(char *stringArr);
 
 int main(void)
@@ -54,7 +54,6 @@ int main(void)
 
 ingredientPos* initialise_nutritional_database(int *indLen) {
 	/* Variable initialisation */
-	char ingredient[MAX_CHARS];
 	char dataFile[] = "Nutritional_database.txt";
 	ingredientPos *indexArr = malloc(DATABASE_DEPTH * sizeof(ingredientPos));
 	FILE *dtb;
@@ -115,9 +114,9 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 		printf("%d: %s\n", indexArr[i].position, indexArr[i].ingredientName);
 }
 
-void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
+nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 {
-	int i = 0, j = 0, k = 0, l = 0, counter = 0;
+	int i = 0, j = 0, l = 0, counter = 0;
 	int searchTermCounter = 0;
 	double multiplier = 0;
 	float protein = 0, kiloJoule = 0;
@@ -180,6 +179,8 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 
 	for (i = 0; i < searchTermCounter; i++)
 	{
+		ingredientPos searchArr[5];
+		int noHits = 0;
 		for (j = 0; j < indLen; j++)
 		{
 			/*
@@ -188,17 +189,30 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 			 */ 
 			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
+				strcpy(searchArr[noHits].ingredientName, indexArr[j].ingredientName);
+				searchArr[noHits].position = indexArr[j].position;
+				noHits++;
+
 				printf("%s\n", indexArr[j].ingredientName);
 				foodArr[i].position = indexArr[j].position;
 
 				printf("How much did you eat of this (in grams)?\n");
 				scanf(" %lf", &multiplier);
+				printf("\n");
 
 				/* Passes to tempoary values */
 				kiloJoule += load_ingredient[l].kiloJoule * (multiplier / 100);
 				protein += load_ingredient[l].protein * (multiplier / 100);
-
+				l++;
 			}
+		}
+		if (noHits > 1)
+		{
+			for (int i = 0; i < noHits; i++)
+			{
+				printf("%d %s\n", i, searchArr[i].ingredientName);
+			}
+
 		}
 	}
 	/* passes the values to stuct */
@@ -207,6 +221,8 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 	load_dish[i].protein = protein;
 	printf("Meal served: %s\nkJ: %d\nProtein: %.2f\n", 
 			load_dish[i].dish, load_dish[i].kiloJoule, load_dish[i].protein);
+
+	return load_dish;
 }
 
 void stringarrToLowercase(char *string)
