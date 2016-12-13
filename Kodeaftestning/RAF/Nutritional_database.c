@@ -15,7 +15,8 @@ typedef struct nutrition
 	char  dish[MAX_CHARS];
 	char  ingredient[MAX_CHARS];
 	int   kiloJoule;
-	float protein;
+	double protein;
+	double weight;
 } nutrition;
 
 typedef struct ingredientPos
@@ -28,34 +29,21 @@ typedef struct searchTerm
 {
     char ingredientName[MAX_CHARS];
     long int position;
+    float weight;
 } searchTerm;
 
 /* Prototypes */
-ingredientPos* initialise_nutritional_database(int *indLen);
+ingredientPos* initialise_nutritional_database(int *indLen, FILE *dtb);
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
-nutrition* ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX]);
+nutrition* ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE *dtb);
 void stringarrToLowercase(char *stringArr);
 
 int main(void)
 {
 	int indLen = 0;
-
-	ingredientPos *indexArr;
-
-	indexArr = initialise_nutritional_database(&indLen);
-	/* Ask for ingredient */
-	ingredient_prompt(indLen, indexArr);
-	//retrieveIngredients();
-	free(indexArr);
-
-	return 0;
-}
-
-ingredientPos* initialise_nutritional_database(int *indLen) {
-	/* Variable initialisation */
+	nutrition *meal;
 	char dataFile[] = "Nutritional_database.txt";
-	ingredientPos *indexArr = malloc(DATABASE_DEPTH * sizeof(ingredientPos));
 	FILE *dtb;
 
 	/* Open the database file and check if open */
@@ -66,9 +54,28 @@ ingredientPos* initialise_nutritional_database(int *indLen) {
 		exit(EXIT_FAILURE);
 	}
 
+	ingredientPos *indexArr;
+
+	indexArr = initialise_nutritional_database(&indLen, dtb);
+	/* Ask for ingredient */
+	meal = ingredient_prompt(indLen, indexArr, dtb);
+	//retrieveIngredients();
+	printf("Dish name: %s \nKilojoules: %d \nProtein: %g \nWeight: %g\n", 
+		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight);
+	free(indexArr);
+	free(meal);
+	fclose(dtb);
+
+	return 0;
+}
+
+ingredientPos* initialise_nutritional_database(int *indLen, FILE *dtb) 
+{
+	/* Variable initialisation */
+	ingredientPos *indexArr = malloc(DATABASE_DEPTH * sizeof(ingredientPos));
+
 	/* Index the database */
 	index_database(dtb, indLen, indexArr);
-	fclose(dtb);
 
 	return indexArr;
 }
@@ -111,37 +118,29 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 	} while (fgetsPtr != NULL);
 
 	for(i = 0; i < *indLen; i++) 
-		printf("%d: %s\n", indexArr[i].position, indexArr[i].ingredientName);
+		printf("%ld: %s\n", indexArr[i].position, indexArr[i].ingredientName);
 }
 
-nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
+nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE *dtb)
 {
-	int i = 0, j = 0, l = 0, counter = 0;
-	int searchTermCounter = 0;
-	double multiplier = 0;
-	float protein = 0, kiloJoule = 0;
-    char tempString[MAX_CHARS];
-	char dataFile[] = "Nutritional_database.txt";
+	int i = 0, j = 0, temp;
+	int noSearchTerms = 0;
+	double weight[10];
+    char tempLine[MAX_LINE_LEN];
     searchTerm foodArr[MAX_LINE_LEN];
-	nutrition *load_dish = malloc(100 * sizeof(nutrition));
-	nutrition *load_ingredient = malloc(100 * sizeof(nutrition));
+	nutrition *dish = malloc(100 * sizeof(nutrition));
 
-	FILE *ifp;
-
-	/* Opens the file to eads the database and recieve the different information */
-	ifp = fopen(dataFile, "r");
-	while (!feof(ifp))
-	{
-		fscanf(ifp, " %[^0-9] %d %f %*f", load_ingredient[i].ingredient, &load_ingredient[i].kiloJoule, &load_ingredient[i].protein);
-		i++;
-		counter++;
-	}
 	/* A prompt that asks for the dish the user is making */
 	i = 0;
 	printf("What dish do you want to make?\n");
-	scanf(" %[A-z, ]", load_dish[i].dish);
+	scanf(" %[A-z, ]", dish[0].ingredient);
+	dish[0].kiloJoule =  0;
+	dish[0].protein =  0;
+	dish[0].weight = 0;
+	i++;
+	noSearchTerms++;
 
-    printf("Scan your ingredients. (Type 'Exit' to stop):\n");
+    printf("Scan your ingredients. (Type 'Exit' or 'e' to stop):\n");
 
     do
     {
@@ -149,15 +148,16 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 	 *  Scan the ingredients you are using.
 	 *  Does not matter if you are using uppercase or lowercase
 	 */
-        scanf(" %s", tempString);
-        strcpy(foodArr[i].ingredientName, tempString);
-        i++;
-        searchTermCounter++;
+        scanf(" %s", &foodArr[i].ingredientName);
 
-        if (strcmp(tempString, "Exit") == 0)
-            searchTermCounter--;
+        if (strcmp(foodArr[i].ingredientName, "Exit") == 0 || strcmp(foodArr[i].ingredientName, "e") == 0)
+            break;
+
+        scanf(" %lf", &weight[i]);
         
-    } while (strcmp(tempString, "Exit") != 0);
+        noSearchTerms++;
+        i++;
+    } while (strcmp(foodArr[i - 1].ingredientName, "Exit") != 0);
 
 	/* 
 	 * These forloops converts the tempString and ingredient names in the index
@@ -165,7 +165,7 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 	 * or lowercase in the scanf above.
 	 */
 
-	for(i = 0; i < searchTermCounter; i++)
+	for(i = 0; i < noSearchTerms; i++)
 	{
 		stringarrToLowercase(foodArr[i].ingredientName);
 	}
@@ -175,11 +175,10 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 	}
 	printf("\n");
 
-	/* These forloops searches the input in the index */
-
-	for (i = 0; i < searchTermCounter; i++)
+	/* These forloops searches the input in the index. Each iteration is one ingredient */
+	for (i = 1; i < noSearchTerms; i++)
 	{
-		ingredientPos searchArr[5];
+		searchTerm searchArr[5];
 		int noHits = 0;
 		for (j = 0; j < indLen; j++)
 		{
@@ -190,39 +189,49 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
 				strcpy(searchArr[noHits].ingredientName, indexArr[j].ingredientName);
-				searchArr[noHits].position = indexArr[j].position;
+				searchArr[noHits].position = indexArr[j].position; // Saves position of the searchterm
+				searchArr[noHits].weight = weight[i]; // Adds weight of the ingredient
 				noHits++;
-
-				printf("%s\n", indexArr[j].ingredientName);
-				foodArr[i].position = indexArr[j].position;
-
-				printf("How much did you eat of this (in grams)?\n");
-				scanf(" %lf", &multiplier);
-				printf("\n");
-
-				/* Passes to tempoary values */
-				kiloJoule += load_ingredient[l].kiloJoule * (multiplier / 100);
-				protein += load_ingredient[l].protein * (multiplier / 100);
-				l++;
 			}
 		}
+
+		temp = 0;
+		/* In case there is several cases under the same search term */
 		if (noHits > 1)
 		{
+			printf("You searched for \"%s\". I found %d hits:\n", foodArr[i].ingredientName, noHits);
 			for (int i = 0; i < noHits; i++)
 			{
-				printf("%d %s\n", i, searchArr[i].ingredientName);
+				printf("%d: %s\n", i, searchArr[i].ingredientName);
 			}
+			printf("Print which one you would like: ");
+			scanf(" %d", &temp);
+		}
 
+		/* Assign the value that you asked for to the dish */
+		for(int j = 0; j < noHits; j++)
+		{
+			if(temp == j)
+			{
+				printf("You choose: %s\n", searchArr[j].ingredientName);
+				puts("");
+				
+				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
+					fgets(tempLine, MAX_LINE_LEN, dtb);
+				else
+					exit(EXIT_FAILURE);
+
+				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
+				dish[i].weight = weight[i];
+
+				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
+				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[0].weight	  += dish[i].weight;
+			}
 		}
 	}
-	/* passes the values to stuct */
-	i = 0;
-	load_dish[i].kiloJoule = kiloJoule;
-	load_dish[i].protein = protein;
-	printf("Meal served: %s\nkJ: %d\nProtein: %.2f\n", 
-			load_dish[i].dish, load_dish[i].kiloJoule, load_dish[i].protein);
 
-	return load_dish;
+	return dish;
 }
 
 void stringarrToLowercase(char *string)

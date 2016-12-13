@@ -20,8 +20,9 @@ typedef struct graphSet
 } graphSet;
 
 void produce_graph( graphSet *test );
-int diff_in_days( tm start_date, tm end_date );
-void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels);
+int diff_in_days( graphSet *test, int noEntries );
+void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels, int margin, int diff);
+int testCoordinates(graphSet *test, int x, int y, int noEntries);
 
 int main (void)
 {
@@ -53,51 +54,60 @@ void produce_graph( graphSet *test )
 	int hPixels = 500, lPixels = 500;
 	FILE *image_file;
 	int r, g, b;
-	int diff;
+	int diff, noEntries = 5;
 	int dens, margin = 20;
 
-	diff = diff_in_days(test[0].coorTime, test[4].coorTime);
+	diff = diff_in_days(test, noEntries);
 	printf("%d\n", diff);
-	dens  = lPixels / (diff + 1);
+	dens  = (lPixels - 2 * margin) / (diff + 1);
 
 
-	/*image_file = fopen("graphTest.pnm", "wb");
+	image_file = fopen("graphTest.pnm", "wb");
 
 	fputs("P6\n", image_file); 
 	fprintf(image_file, "%d %d\n", hPixels, lPixels);
-	fputs("255\n", image_file);*/
+	fputs("255\n", image_file);
 
-	determineCoorset(test, dens, hPixels, lPixels);
+	determineCoorset(test, dens, hPixels, lPixels, margin, diff);
 
-	/*for(i = 1; i <= hPixels; i++)
+	for(int y = hPixels; y >= 1; y--)
 	{
-		for(u = 1; u <= lPixels; u++)
+		for(int x = 1; x <= lPixels; x++)
 		{
 			r = 255; g = 255; b = 255;
-			if(245 < i && i <= 256) {
-				if ( || dens2 - (u % dens2) > dens2 - 5) {
-					r = 255; g = 0; b = 0;
-				}
+			
+			if(testCoordinates(test, x, y, noEntries)) {
+				r = 255; g = 0; b = 0;
 			}
 
 			fputc(r, image_file);
 			fputc(g, image_file);
 			fputc(b, image_file);
 		}
-	}*/
+	}
 }
 
-int diff_in_days( tm start_date, tm end_date )
+int diff_in_days( graphSet *test, int noEntries )
 {
 	int dayDiff;
 	time_t start_time, end_time;
 	double seconds;
 
-	end_date.tm_hour = 0;   end_date.tm_min = 0;   end_date.tm_sec = 0;
-	start_date.tm_hour = 0; start_date.tm_min = 0; start_date.tm_sec = 0;
+	for(int i = 0; i < noEntries; i++)
+	{
+		test[i].coorTime.tm_hour = 0; test[i].coorTime.tm_min = 0; test[i].coorTime.tm_sec = 0;
+	}
 
-	start_time = mktime(&start_date);
-	end_time = mktime(&end_date);
+	start_time = mktime(&(test[0].coorTime));
+	end_time = mktime(&(test[0].coorTime));
+
+	for(int i = 0; i < noEntries; i++)
+	{
+		if(mktime(&(test[i].coorTime)) < start_time)
+			start_time = mktime(&(test[i].coorTime));
+		if(mktime(&(test[i].coorTime)) > end_time)
+			end_time = mktime(&(test[i].coorTime));
+	}
 
 	seconds = difftime(end_time, start_time);
 
@@ -108,11 +118,12 @@ int diff_in_days( tm start_date, tm end_date )
 	return dayDiff;
 }
 
-void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels)
+void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels, int margin, int diff)
 {
 	int biggestKJ = test[0].kJEaten;
 	int smallestKJ = test[0].kJEaten;
 	int log;
+	int valueX, valueY;
 
 	for(int i = 0; i < 5; i++)
 	{
@@ -127,7 +138,23 @@ void determineCoorset(graphSet *test, int dens, int hPixels, int lPixels)
 	for(int i = 0; i < 5; i++)
 	{
 		printf("Log: %d\n", log);
-		int value = (hPixels * (biggestKJ - smallestKJ)) / (100 * pow(10, log)) * test[i].kJEaten;
-		printf("Entry: %d. PixelPos: %d. Value: %d\n", i, value, test[i].kJEaten);
+		valueY = (((hPixels - 2 * margin) * (biggestKJ - smallestKJ)) / 
+				(100 * pow(10, log)) * test[i].kJEaten) + margin;
+		test[i].yCoor = valueY;
+
+		valueX = (i * (lPixels - 2 * margin)) / diff + 20;
+		test[i].xCoor = valueX;
+
+		printf("Entry: %d. PixelX: %d. PixelY: %d. Value: %d\n", i, test[i].xCoor, test[i].yCoor, test[i].kJEaten);
 	}
+}
+
+int testCoordinates(graphSet *test, int x, int y, int noEntries)
+{
+	for(int i = 0; i < noEntries; i++)
+	{
+		if(sqrt(pow((test[i].xCoor - x), 2) + pow(test[i].yCoor - y, 2)) < 5)
+			return 1;
+	}
+	return 0;
 }
