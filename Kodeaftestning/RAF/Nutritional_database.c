@@ -154,6 +154,8 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
             break;
 
         scanf(" %lf", &weight[i]);
+
+        /* Tobias er sej */
         
         noSearchTerms++;
         i++;
