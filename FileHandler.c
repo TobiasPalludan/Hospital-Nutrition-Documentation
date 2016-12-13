@@ -81,12 +81,14 @@ int main(void)
 
 	/* remove this when fucntions for adding real patients is there*/
 	personInfo Casper = { 3, "afdeling 1", 1110954441, "Casper", "graes", "feber"};
+
 	nutritionIntake feedCasper[3] = {
 										{"Kartofler med Sovs", 2000, 50.2, 150 },
 										{"Kartofler", 1500, 10.2, 100},
 										{"Sovs", 500, 40, 50 }
 									};
 	conditionHistory CasperErSygLog = { 3, "18:18", 70, 192, 23.1, 2400, 41.7, "feber", "graes" };
+
 	add_person(Casper);
 	add_food_intake(Casper, feedCasper);
 	add_condition_log(Casper, CasperErSygLog);
@@ -109,8 +111,11 @@ void add_person(personInfo person)/*Function for adding a person the the system 
 	save_in_file(personFilePtr, log, fileName);
 }
 
-void add_food_intake(personInfo person, nutritionIntake intake[])
+void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food intake to their patientfile */
 {
+
+	/* NEEDS A FIX! needs the size of the "nutritionIntake" array to work! either from as a parameter or as an element in the array!*/
+
 	FILE *foodFilePtr;
 
 	char fileName[FILE_NAME_SIZE],
@@ -118,7 +123,7 @@ void add_food_intake(personInfo person, nutritionIntake intake[])
 		 timeStamp[TIME_STAMP_SIZE];
 
 	datestamp(timeStamp);
-	//int a = sizeof(nutritionIntake) / sizeof(intake[0]);
+	/* int a = sizeof(nutritionIntake) / sizeof(intake[0]); */
 	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
 	printf("%s\n", fileName);
 
