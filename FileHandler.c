@@ -35,16 +35,6 @@ typedef struct personInfo
 	double temperature;
 }personInfo;
 
-/*typedef struct foodHistory
-{
-	int id;
-	char timeStamp[TIME_STAMP_SIZE];
-	char dishName[DISH_NAME_SIZE];
-	char indgredients[INGREDIENTS_SIZE];
-	int totalKJ;
-	int percentageEaten;
-}foodHistory;*/
-
 typedef struct nutritionIntake
 {
 	char  ingredient[INGREDIENTS_SIZE];
