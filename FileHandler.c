@@ -35,16 +35,6 @@ typedef struct personInfo
 	double temperature;
 }personInfo;
 
-/*typedef struct foodHistory
-{
-	int id;
-	char timeStamp[TIME_STAMP_SIZE];
-	char dishName[DISH_NAME_SIZE];
-	char indgredients[INGREDIENTS_SIZE];
-	int totalKJ;
-	int percentageEaten;
-}foodHistory;*/
-
 typedef struct nutritionIntake
 {
 	char  ingredient[INGREDIENTS_SIZE];
@@ -55,8 +45,6 @@ typedef struct nutritionIntake
 
 typedef struct conditionHistory 
 {
-//	int id;
-//	char timeStamp[TIME_STAMP_SIZE];
 	int weight;
 	int height;
 	double bmi;
@@ -66,13 +54,13 @@ typedef struct conditionHistory
 	char allergy[ALLERGY_SIZE];
 }conditionHistory;
 
-void add_person(personInfo person);
+void add_person(personInfo *person);
 void add_food_intake(personInfo person, nutritionIntake intake[]);
 void add_condition_log(personInfo person, conditionHistory conditionLog);
 void make_patient_folder(char *string);
 void make_folder(personInfo person);
 void save_in_file(FILE *filePtr, char string[], char fileName[]);
-void update_index_file(personInfo person);
+void update_index_file(personInfo *person);
 int find_index(FILE *filePtr, char fileName[]);
 
 int main(void)
@@ -87,27 +75,27 @@ int main(void)
 										{"Kartofler", 1500, 10.2, 100},
 										{"Sovs", 500, 40, 50 }
 									};
-	conditionHistory CasperErSygLog = { 3, "18:18", 70, 192, 23.1, 2400, 41.7, "feber", "graes" };
+	conditionHistory CasperErSygLog = {70, 192, 23.1, 2400, 41.7, "feber", "graes" };
 
-	add_person(Casper);
+	add_person(&Casper);
 	add_food_intake(Casper, feedCasper);
 	add_condition_log(Casper, CasperErSygLog);
 	
 	return 0;
 }
 
-void add_person(personInfo person)/*Function for adding a person the the system */
+void add_person(personInfo *person)/*Function for adding a person the the system */
 {
 	FILE *personFilePtr;
 
 	update_index_file(person);
-	make_folder(person);
+	make_folder(*person);
 
 	char fileName[FILE_NAME_SIZE],
 		 log[LOG_FILE_SIZE];
 
-	sprintf(fileName, "%s%d/%d ID.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
-	sprintf(log, "%d, %s, %d, %s, %s\n", person.id, person.department, person.cprNumber, person.name, person.allergy);/*Pulls log indformation from stuct*/
+	sprintf(fileName, "%s%d/%d ID.txt", FILE_PATH, person->id, person->id); /*Creates file name from ID of the person*/
+	sprintf(log, "%d, %s, %d, %s, %s\n", person->id, person->department, person->cprNumber, person->name, person->allergy);/*Pulls log indformation from stuct*/
 	save_in_file(personFilePtr, log, fileName);
 }
 
@@ -195,7 +183,7 @@ void make_folder(personInfo person) /* Makes patient subfolders */
 	} else printf("Folder already exists\n");
 }
 
-void update_index_file(personInfo person) /* Updates the index file that tracks all the patients*/
+void update_index_file(personInfo *person) /* Updates the index file that tracks all the patients*/
 {
 	FILE *indexFilePtr;
 	char indexLog[NAME_SIZE],
@@ -203,7 +191,8 @@ void update_index_file(personInfo person) /* Updates the index file that tracks 
 
 	sprintf(fileName, "%s%s", FILE_PATH, INDEX_FILE_NAME);
 	int index = find_index(indexFilePtr, fileName);
-	sprintf(indexLog, "%d %s %s\n", index, person.name, person.illness);
+	person->id = index;
+	sprintf(indexLog, "%d %s %s\n", index, person->name, person->illness);
 
 	save_in_file(indexFilePtr, indexLog, fileName);
 }
