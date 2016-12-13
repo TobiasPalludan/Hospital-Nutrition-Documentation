@@ -12,6 +12,7 @@
 /* Structs */
 typedef struct nutrition 
 {
+	char  dish[MAX_CHARS];
 	char  ingredient[MAX_CHARS];
 	int   kiloJoule;
 	float protein;
@@ -32,7 +33,6 @@ typedef struct searchTerm
 /* Prototypes */
 ingredientPos* initialise_nutritional_database(int *indLen);
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
-//nutrition load_ingredient(char *ingredient, int kiloJoule, float protein);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
 void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX]);
 void stringarrToLowercase(char *stringArr);
@@ -48,7 +48,6 @@ int main(void)
 	ingredient_prompt(indLen, indexArr);
 	//retrieveIngredients();
 	free(indexArr);
-	fclose(dtb);
 
 	return 0;
 }
@@ -70,6 +69,7 @@ ingredientPos* initialise_nutritional_database(int *indLen) {
 
 	/* Index the database */
 	index_database(dtb, indLen, indexArr);
+	fclose(dtb);
 
 	return indexArr;
 }
@@ -117,14 +117,39 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 
 void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 {
-	int i = 0, j = 0, searchTermCounter = 0;
+	int i = 0, j = 0, k = 0, l = 0, counter = 0;
+	int searchTermCounter = 0;
+	double multiplier = 0;
+	float protein = 0, kiloJoule = 0;
     char tempString[MAX_CHARS];
+	char dataFile[] = "Nutritional_database.txt";
     searchTerm foodArr[MAX_LINE_LEN];
+	nutrition *load_dish = malloc(100 * sizeof(nutrition));
+	nutrition *load_ingredient = malloc(100 * sizeof(nutrition));
+
+	FILE *ifp;
+
+	/* Opens the file to eads the database and recieve the different information */
+	ifp = fopen(dataFile, "r");
+	while (!feof(ifp))
+	{
+		fscanf(ifp, " %[^0-9] %d %f %*f", load_ingredient[i].ingredient, &load_ingredient[i].kiloJoule, &load_ingredient[i].protein);
+		i++;
+		counter++;
+	}
+	/* A prompt that asks for the dish the user is making */
+	i = 0;
+	printf("What dish do you want to make?\n");
+	scanf(" %[A-z, ]", load_dish[i].dish);
 
     printf("Scan your ingredients. (Type 'Exit' to stop):\n");
 
     do
     {
+	/*  
+	 *  Scan the ingredients you are using.
+	 *  Does not matter if you are using uppercase or lowercase
+	 */
         scanf(" %s", tempString);
         strcpy(foodArr[i].ingredientName, tempString);
         i++;
@@ -135,6 +160,11 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
         
     } while (strcmp(tempString, "Exit") != 0);
 
+	/* 
+	 * These forloops converts the tempString and ingredient names in the index
+	 * to lowercase. That is why it does not matter if you are using uppercase
+	 * or lowercase in the scanf above.
+	 */
 
 	for(i = 0; i < searchTermCounter; i++)
 	{
@@ -144,28 +174,39 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 	{
 		stringarrToLowercase(indexArr[i].ingredientName);
 	}
-	
-	printf("\nPrinted:\n");
+	printf("\n");
 
-	for (i = 0; i < searchTermCounter; i++)
-	{
-		printf("%s\n", foodArr[i].ingredientName);
-	}
-	
+	/* These forloops searches the input in the index */
 
 	for (i = 0; i < searchTermCounter; i++)
 	{
 		for (j = 0; j < indLen; j++)
 		{
+			/*
+			 * This if statement uses needle and the haystack.
+			 * it searches for a word in another word.
+			 */ 
 			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
-				foodArr[i].position = indexArr[j].position;
 				printf("%s\n", indexArr[j].ingredientName);
-				fscanf(dtb, "%[^0-9] %d %f %*f \n", )
-			}
+				foodArr[i].position = indexArr[j].position;
 
+				printf("How much did you eat of this (in grams)?\n");
+				scanf(" %lf", &multiplier);
+
+				/* Passes to tempoary values */
+				kiloJoule += load_ingredient[l].kiloJoule * (multiplier / 100);
+				protein += load_ingredient[l].protein * (multiplier / 100);
+
+			}
 		}
 	}
+	/* passes the values to stuct */
+	i = 0;
+	load_dish[i].kiloJoule = kiloJoule;
+	load_dish[i].protein = protein;
+	printf("Meal served: %s\nkJ: %d\nProtein: %.2f\n", 
+			load_dish[i].dish, load_dish[i].kiloJoule, load_dish[i].protein);
 }
 
 void stringarrToLowercase(char *string)
