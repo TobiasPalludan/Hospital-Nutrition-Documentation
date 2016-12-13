@@ -118,7 +118,8 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 {
 	int i = 0, j = 0, k = 0, l = 0, counter = 0;
-	int searchTermCounter = 0; 
+	int searchTermCounter = 0;
+	double multiplier = 0;
 	float protein = 0, kiloJoule = 0;
     char tempString[MAX_CHARS];
 	char dataFile[] = "Nutritional_database.txt";
@@ -190,9 +191,12 @@ void ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX])
 				printf("%s\n", indexArr[j].ingredientName);
 				foodArr[i].position = indexArr[j].position;
 
+				printf("How much did you eat of this (in grams)?\n");
+				scanf(" %lf", &multiplier);
+
 				/* Passes to tempoary values */
-				kiloJoule += load_ingredient[l].kiloJoule;
-				protein += load_ingredient[l].protein;
+				kiloJoule += load_ingredient[l].kiloJoule * (multiplier / 100);
+				protein += load_ingredient[l].protein * (multiplier / 100);
 
 			}
 		}
