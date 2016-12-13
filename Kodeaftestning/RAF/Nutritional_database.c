@@ -39,6 +39,9 @@ void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
 nutrition* ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE *dtb);
 void stringarrToLowercase(char *stringArr);
 
+void search_db(int noSearchTerms, double weight[10], int indLen, ingredientPos indexArr[MAX_INDEX], searchTerm foodArr[MAX_LINE_LEN], nutrition *dish, FILE *dtb);
+
+
 int main(void)
 {
 	int indLen = 0;
@@ -57,11 +60,15 @@ int main(void)
 	ingredientPos *indexArr;
 
 	indexArr = initialise_nutritional_database(&indLen, dtb);
+
 	/* Ask for ingredient */
 	meal = ingredient_prompt(indLen, indexArr, dtb);
-	//retrieveIngredients();
+
+
+	/* Prints the meal */
 	printf("Dish name: %s \nKilojoules: %d \nProtein: %g \nWeight: %g\n", 
 		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight);
+
 	free(indexArr);
 	free(meal);
 	fclose(dtb);
@@ -126,8 +133,7 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 	int i = 0, j = 0, temp;
 	int noSearchTerms = 0;
 	double weight[10];
-    char tempLine[MAX_LINE_LEN];
-    searchTerm foodArr[MAX_LINE_LEN];
+	searchTerm foodArr[MAX_LINE_LEN];
 	nutrition *dish = malloc(100 * sizeof(nutrition));
 
 	/* A prompt that asks for the dish the user is making */
@@ -140,7 +146,7 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 	i++;
 	noSearchTerms++;
 
-    printf("Scan your ingredients. (Type 'Exit' or 'e' to stop):\n");
+    printf("Scan your ingredients and the amount eaten in grams. (Type 'Exit' or 'e' to stop):\n");
 
     do
     {
@@ -178,10 +184,28 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 	printf("\n");
 
 	/* These forloops searches the input in the index. Each iteration is one ingredient */
+	search_db(noSearchTerms, weight, indLen, indexArr, foodArr, dish, dtb);
+
+	return dish;
+}
+
+void stringarrToLowercase(char *string)
+{
+	for(int i = 0; i < strlen(string); i++)
+	{
+		string[i] = tolower(string[i]);
+	}
+}
+
+void search_db(int noSearchTerms, double weight[10], int indLen, ingredientPos indexArr[MAX_INDEX], searchTerm foodArr[MAX_LINE_LEN], nutrition *dish, FILE *dtb)
+{
+	int i = 0, j = 0, noHits = 0, temp = 0;
+    char tempLine[MAX_LINE_LEN];
+    
+
 	for (i = 1; i < noSearchTerms; i++)
 	{
 		searchTerm searchArr[5];
-		int noHits = 0;
 		for (j = 0; j < indLen; j++)
 		{
 			/*
@@ -197,7 +221,6 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 			}
 		}
 
-		temp = 0;
 		/* In case there is several cases under the same search term */
 		if (noHits > 1)
 		{
@@ -211,7 +234,7 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 		}
 
 		/* Assign the value that you asked for to the dish */
-		for(int j = 0; j < noHits; j++)
+		for(j = 0; j < noHits; j++)
 		{
 			if(temp == j)
 			{
@@ -231,16 +254,6 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 				dish[0].weight	  += dish[i].weight;
 			}
 		}
-	}
-
-	return dish;
-}
-
-void stringarrToLowercase(char *string)
-{
-	for(int i = 0; i < strlen(string); i++)
-	{
-		string[i] = tolower(string[i]);
 	}
 }
 
