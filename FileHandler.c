@@ -66,7 +66,7 @@ int find_index(FILE *filePtr, char fileName[]);
 int main(void)
 {
 	
-	/* remove this when fucntions for adding real patients is there*/
+	/* remove this when functions for adding real patients is there*/
 	personInfo Casper = { 3, "afdeling 1", 1110954441, "Casper", "graes", "feber"};
 
 	nutritionIntake feedCasper[3] = {

@@ -38,6 +38,8 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr);
 void load_index(FILE *ind, ingredientPos *indexArr, int indLen);
 nutrition* ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE *dtb);
 void stringarrToLowercase(char *stringArr);
+nutrition* find_database_value(int noSearchTerms, int indLen, ingredientPos indexArr[MAX_INDEX], 
+						 FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[]);
 
 int main(void)
 {
@@ -83,8 +85,8 @@ ingredientPos* initialise_nutritional_database(int *indLen, FILE *dtb)
 void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 {
 	/* 
-	 * Only reached if no index file is currently present.
-	 * Index file should be deleted after the database has been altered.
+	 * Only to be called once per runtime. Will load the index file, 
+	 * and return a pointer through parameter.
 	 */
 	char tempString[MAX_LINE_LEN];
 	char *fgetsPtr;
@@ -121,12 +123,11 @@ void index_database(FILE *dtb, int *indLen, ingredientPos *indexArr)
 		printf("%ld: %s\n", indexArr[i].position, indexArr[i].ingredientName);
 }
 
-nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE *dtb)
+nutrition* ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE *dtb)
 {
 	int i = 0, j = 0, temp;
 	int noSearchTerms = 0;
 	double weight[10];
-    char tempLine[MAX_LINE_LEN];
     searchTerm foodArr[MAX_LINE_LEN];
 	nutrition *dish = malloc(100 * sizeof(nutrition));
 
@@ -178,9 +179,19 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 	printf("\n");
 
 	/* These forloops searches the input in the index. Each iteration is one ingredient */
+	find_database_value(noSearchTerms, indLen, indexArr, dtb, foodArr, dish, weight);
+
+	return dish;
+}
+
+nutrition* find_database_value(int noSearchTerms, int indLen, ingredientPos indexArr[MAX_INDEX], 
+							   FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[])
+{
+	int i, j, temp;
+	char tempLine[MAX_LINE_LEN];
 	for (i = 1; i < noSearchTerms; i++)
 	{
-		searchTerm searchArr[5];
+		searchTerm searchArr[10];
 		int noHits = 0;
 		for (j = 0; j < indLen; j++)
 		{
@@ -210,7 +221,7 @@ nutrition *ingredient_prompt(int indLen, ingredientPos indexArr[MAX_INDEX], FILE
 			scanf(" %d", &temp);
 		}
 
-		/* Assign the value that you asked for to the dish */
+		/* Retrieve data from database */
 		for(int j = 0; j < noHits; j++)
 		{
 			if(temp == j)
