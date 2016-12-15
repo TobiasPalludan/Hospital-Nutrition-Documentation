@@ -201,8 +201,12 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
 				dish[i].weight = weight[i];
 
-				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
-				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[i].kiloJoule  = (dish[i].weight / 100) * dish[i].kiloJoule;
+				dish[0].kiloJoule += dish[i].kiloJoule;
+
+				dish[i].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[i].protein    = dish[i].protein;
+
 				dish[0].weight	  +=  dish[i].weight;
 				dish[0].noIngredients = noSearchTerms - 1;
 			}
