@@ -1,2 +1,2 @@
-collect: all.c functions.c
-	gcc -o program all.c functions.c
+collect: all.c functions.c Nutritional_database.c
+	gcc -o program all.c functions.c Nutritional_database.c
