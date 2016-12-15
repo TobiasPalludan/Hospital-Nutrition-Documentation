@@ -130,7 +130,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 
         noSearchTerms++;
         i++;
-    } while (strcmp(foodArr[i - 1].ingredientName, "exit") != 0);
+    } while (i < MAX_INGREDIENTS);
 
 	/*
 	 * These forloops converts the tempString and ingredient names in the index

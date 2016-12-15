@@ -3,6 +3,7 @@
 #define MAX_CHARS 25
 #define DATABASE_DEPTH 15
 #define MAX_INDEX 100
+#define MAX_INGREDIENTS 20
 
 /* Struct, where element 0 is the meal, and element >0 is a part of the meal */
 typedef struct nutrition
