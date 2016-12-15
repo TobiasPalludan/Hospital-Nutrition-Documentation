@@ -128,7 +128,7 @@ void add_person(personInfo *person)		/* Function for adding a person the the sys
 	save_in_file(personFilePtr, log, fileName);
 }
 
-void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food intake to the patientfile */
+void add_food_intake(int p_ID, nutrition intake[]) /* Adds a food intake to the patientfile */
 {
 
 	/* NEEDS A FIX! needs the size of the "nutritionIntake" array to work! either from as a parameter or as an element in the array!*/
@@ -143,20 +143,20 @@ void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food
 	/* int a = sizeof(nutritionIntake) / sizeof(intake[0]); */
 	/* printf("size of struct arr %d\n", a); */
 
-	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
+	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, p_ID, p_ID); /*Creates file name from ID of the person*/
 	printf("%s\n", fileName);
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < intake[0].noIngredients +1; i++)
 	{
 		if (i == 0)					/* Print the dish name,total nutrition, and a timestamp */
 		{
 			printf("first");
-			sprintf(log, "%16s  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
+			sprintf(log, "%16s  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].weight);
 			save_in_file(foodFilePtr, log, fileName);
 		}
 		else						/* Print the engredients of the dish */
 		{
-			sprintf(log, "                  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
+			sprintf(log, "                  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].weight);
 			save_in_file(foodFilePtr, log, fileName);
 		}
 	}

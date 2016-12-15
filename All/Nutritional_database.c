@@ -4,37 +4,6 @@
 #include <ctype.h>
 #include "Nutritional_database.h"
 
-int main(void)
-{
-	int indLen = 0;
-	nutrition *meal;
-	char dataFile[] = "Nutritional_database.txt";
-	FILE *dtb;
-
-	/* Open the database file and check if open */
-	dtb = fopen(dataFile, "r+");
-	if(dtb == NULL)
-	{
-		printf("No database with name \"%s\" exists!\n", dataFile);
-		exit(EXIT_FAILURE);
-	}
-
-	indexPos *indexArr;
-	indexArr = index_database(&indLen, dtb);
-
-	/* Ask for ingredient */
-	meal = ingredient_prompt(indLen, indexArr, dtb);
-	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\nNo: %d ingredients\n",
-		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight, meal[0].noIngredients);
-
-	/* Free all dynamically allocated arrays, and close database */
-	free(indexArr);
-	free(meal);
-	fclose(dtb);
-
-	return 0;
-}
-
 /*
  * Param indLen is the length of the index array. Returned by the function as a parameter.
  * Param dtb is the pointer to the database file.

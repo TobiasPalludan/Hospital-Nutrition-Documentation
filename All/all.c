@@ -24,13 +24,13 @@
 #define clear() system("cls")
 
 /* Userinterface prototypes*/
-void p_main_menu();
-void p_new_patient();
-void p_existing_patient();
-void p_patient_menu(int p_ID);
-void p_update(int p_ID);
+void p_main_menu(indexPos *indexArr);
+void p_new_patient(indexPos *indexArr);
+void p_existing_patient(indexPos *indexArr);
+void p_patient_menu(indexPos *indexArr, int p_ID);
+void p_update(indexPos *indexArr, int p_ID);
 void p_weight(int p_ID);
-void p_intake(int p_ID);
+void p_intake(indexPos *indexArr, int p_ID);
 void p_change(int p_ID);
 void p_print(int p_ID);
 int p_discharge(int p_ID);
@@ -39,11 +39,28 @@ int p_discharge(int p_ID);
 
 int
 main (void){
-  p_main_menu();
+  int indLen = 0;
+  indexPos *indexArr;
+  char dataFile[] = "Nutritional_database.txt";
+  FILE *dtb;
+
+  /* Open the database file and check if open */
+  dtb = fopen(dataFile, "r+");
+  if(dtb == NULL)
+  {
+    printf("No database with name \"%s\" exists!\n", dataFile);
+    exit(EXIT_FAILURE);
+  }
+  indexArr = index_database(&indLen, dtb);
+
+  p_main_menu(indexArr);
+  clear();
+  free(indexArr);
+  fclose(dtb);
   return 0;
 }
 
-void p_main_menu(){
+void p_main_menu(indexPos *indexArr){
 
   int choice;
   choice = 4;
@@ -57,19 +74,19 @@ void p_main_menu(){
       }
 
       if (choice == 1){
-        p_new_patient();
+        p_new_patient(indexArr);
         choice = RESET_OPTION;
       }
 
       else if (choice == 2){
-        p_existing_patient();
+        p_existing_patient(indexArr);
         choice = RESET_OPTION;
       }
     }
   return;
 }
 
-void p_new_patient(){
+void p_new_patient(indexPos *indexArr){
   clear();
   /*Promt for input til ny patient*/
   /*Hardcoded*/
@@ -85,21 +102,21 @@ void p_new_patient(){
 	add_person(&person);
 	add_condition_log(person, personLog);
 
-  p_patient_menu(person.id);
+  p_patient_menu(indexArr, person.id);
   return;
 }
 
-void p_existing_patient(){
+void p_existing_patient(indexPos *indexArr){
   int p_ID;
   clear();
   printf("Main Menu/Patient Menu\n\n Enter patient ID\n>");
   scanf("\n%d", &p_ID);
-  p_patient_menu(p_ID);
+  p_patient_menu(indexArr, p_ID);
   return;
 }
 
 
-void p_patient_menu(int p_ID){
+void p_patient_menu(indexPos *indexArr, int p_ID){
   int choice;
   choice = RESET_OPTION;
   clear();
@@ -114,7 +131,7 @@ void p_patient_menu(int p_ID){
       }
 
     if (choice == 1){
-      p_update(p_ID);
+      p_update(indexArr, p_ID);
       choice = RESET_OPTION;
     }
 
@@ -131,7 +148,7 @@ void p_patient_menu(int p_ID){
 }
 
 
-void p_update(int p_ID){
+void p_update(indexPos *indexArr, int p_ID){
   int choice;
   choice = RESET_OPTION;
 
@@ -150,7 +167,7 @@ void p_update(int p_ID){
 
       else if (choice == 2)
       {
-        p_intake(p_ID);
+        p_intake(indexArr, p_ID);
         choice = RESET_OPTION;
       }
 
@@ -214,39 +231,57 @@ void p_weight(int p_ID){
   return;
 }
 
-void p_intake(int p_ID){
+void p_intake(indexPos *indexArr, int p_ID){
   /*Scan new intake*/
-  int choice;
+  int choice, indLen = 0;
+  nutrition *meal;
+  char dataFile[] = "Nutritional_database.txt";
+  FILE *dtb;
+
   clear();
   printf("Main Menu/Patient Menu/Update patient data/New Intake\n Patient #%d\n\n Insert new intake or press 0 to go back to Patient_menu\n\n>",  p_ID);
   scanf("\n%d", &choice);
 
   if (choice != 0){
-    /*Hardcoded*/
-    personInfo Casper = { p_ID, "afdeling 1", 1110954441, "Casper", "noddeallergi", "feber"};
-    nutritionIntake feedCasper[3] = {
-                      {"Kartofler med Sovs", 2000, 50.2, 150 },
-                      {"Kartofler", 1500, 10.2, 100},
-                      {"Sovs", 500, 40, 50 }
-                    };
+    /* Open the database file and check if open */
+    dtb = fopen(dataFile, "r+");
+    if(dtb == NULL)
+    {
+      printf("No database with name \"%s\" exists!\n", dataFile);
+      exit(EXIT_FAILURE);
+    }
 
-    add_food_intake(Casper, feedCasper);
+
+
+  	/* Ask for ingredient */
+  	meal = ingredient_prompt(indLen, indexArr, dtb);
+  	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\nNo: %d ingredients\n",
+  		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight, meal[0].noIngredients);
+
+  	/* Free all dynamically allocated arrays, and close database */
 
     printf("\nPatient intake is registered\n *press 0 to go back to Patient_menu\n\n>");
     scanf("\n%d", &choice);
     while (choice != 0){
       printf("*press 0 to go back to Patient_menu\n\n>");
       scanf("\n%d", &choice);
-    }
+      }
   }
+
+  /*
+   * Param indLen is the length of the index array. Returned by the function as a parameter.
+   * Param dtb is the pointer to the database file.*/
+    add_food_intake(p_ID, meal);
+    free(meal);
+
     return;
 }
 
 void p_change(int p_ID){
   /*Change patient data/info*/
   FILE* fileptr;
-  conditionHistory person;
-  double choice;
+  personInfo person;
+  int choice;
   char place[30], patient_data[100], uselesstime[100], date[20];
 
   sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
@@ -264,25 +299,29 @@ void p_change(int p_ID){
   clear();
   sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s | %s", uselesstime, &person.weight, &person.height, &person.bmi, &person.bmr, &person.temperature, person.illness, person.allergy);
 
-  printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n\nInsert updated patient info in the order: weight, height, BMI, BMR, temperature, illness og allergy \n\n or press 0 to go back to Patient_menu", p_ID);
-  printf("\n\n%s\n", "Persondata foer aendring");
-  printf("\n%s\n\n>", patient_data);
-  scanf("\n%lf %lf %lf %d %lf %s %s",&choice, &person.height, &person.bmi, &person.bmr, &person.temperature, person.illness, person.allergy);
-
+  printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n\n*press 1 to insert updated patient info\n*press 0 to go back to Patient_menu\n\n>", p_ID);
+  scanf("%d", &choice);
   if (choice != 0){
-    person.weight = choice;
+    clear();
+    printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n", p_ID);
+    printf("Enter updated info in the order: weight, height, temperature, illness og allergy\n\n"
+    "Persondata foer aendring:\n\n| Weight | Height | Temp |  Illness  |  Allergy  |\n"
+    "| %6g | %6g | %4g | %9s | %9s |\n\nEnter the new information:\n>",  person.weight, person.height, person.temperature, person.illness, person.allergy);
+
+    scanf("\n%lf %lf %lf %s %s",&person.weight, &person.height, &person.temperature, person.illness, person.allergy);
+
     datestamp(date);
 
-    printf("%s\n", "Persondata efter aendring");
-    printf("\n%s | %.2lf | %.2lf | %.2lf | %d | %.2lf | %s | %s", date, person.weight, person.height, person.bmi, person.bmr, person.temperature, person.illness, person.allergy);
-
-    fprintf(fileptr, "\n%s | %.2lf | %.2lf | %.2lf | %d | %.2lf | %s | %s", date, person.weight, person.height, person.bmi, person.bmr, person.temperature, person.illness, person.allergy);
+    printf("|%s\n", "Persondata efter aendring:");
+    printf("\n| %g | %g | %g | %s | %s |", person.weight, person.height, person.temperature, person.illness, person.allergy);
+    person.bmi = BMI(person.height, person.weight);
+    person.bmr = BMR(person.height, person.weight, person.cprNumber);
+    fprintf(fileptr, "\n %s | %6g | %6g | %5.1lf | %5d | %4g | %9s | %9s |", date, person.weight, person.height, person.bmi, person.bmr, person.temperature, person.illness, person.allergy);
     fclose(fileptr);
 
-    printf("\nPatient info is updated\n *press 0 to go back to Patient_menu\n\n>");
-    scanf("\n%d", &choice);
+    printf("\n\nPatient info is updated\n");
     while(choice!=0){
-      printf("*press 0 to go back to Patient_menu\n\n>");
+      printf("*press 0 to go back to Patient menu\n\n>");
       scanf("\n%d", &choice);
       }
     }
@@ -297,8 +336,8 @@ void p_print(int p_ID){
   char place[30],  patient_data[200], place_log[30], patient_data_log[200];
   choice = RESET_OPTION;
 
-  sprintf(place, "%s%d/%d ID.txt\0", FILE_PATH, p_ID, p_ID);
-  sprintf(place_log, "%s%d/%d condition.txt\0", FILE_PATH, p_ID, p_ID);
+  sprintf(place, "%s%d/%d ID.txt", FILE_PATH, p_ID, p_ID);
+  sprintf(place_log, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
 
   fileptr = fopen(place, "r");
   fileptr_log = fopen(place_log, "r");
@@ -314,11 +353,10 @@ void p_print(int p_ID){
   fclose(fileptr_log);
 
   clear();
-  printf("\nPlace : %s, Place_log: %s\n", place, place_log);
   printf("Main Menu/Patient Menu/Print patient info\n Patient #%d\n\n",  p_ID);
   printf("%s\n", patient_data);
 
-  printf("%s\n\n", patient_data_log);
+  printf("|       Date       | Weight |   Height |   BMI |  BMR  | Temp |   Illness |   Allergy |\n|%s\n\n", patient_data_log);
 
   while(choice != 0){
     printf("*press 0 to return to patient menu\n\n>");
