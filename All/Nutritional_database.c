@@ -207,24 +207,6 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 				dish[0].weight	  +=  dish[i].weight;
 				dish[0].noIngredients = noSearchTerms - 1;
 			}
-			else if(temp == i)
-			{
-				printf("You choose: %s\n", searchArr[j].ingredientName);
-				puts("");
-
-				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
-					fgets(tempLine, MAX_LINE_LEN, dtb);
-				else
-					exit(EXIT_FAILURE);
-
-				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
-				dish[i].weight = weight[i];
-
-				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
-				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
-				dish[0].weight	  +=  dish[i].weight;
-				dish[0].noIngredients = noSearchTerms - 1;
-			}
 		}
 	}
 
