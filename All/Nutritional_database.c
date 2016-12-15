@@ -191,8 +191,7 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 		{
 			if(temp == j)
 			{
-				printf("You choose: %s\n", searchArr[j].ingredientName);
-				puts("");
+				printf("You choose: %s\n\n", searchArr[j].ingredientName);
 
 				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
 					fgets(tempLine, MAX_LINE_LEN, dtb);
