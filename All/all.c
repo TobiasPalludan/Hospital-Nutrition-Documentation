@@ -24,13 +24,13 @@
 #define clear() system("cls")
 
 /* Userinterface prototypes*/
-void p_main_menu(indexPos *indexArr);
-void p_new_patient(indexPos *indexArr);
-void p_existing_patient(indexPos *indexArr);
-void p_patient_menu(indexPos *indexArr, int p_ID);
-void p_update(indexPos *indexArr, int p_ID);
+void p_main_menu(indexPos *indexArr, int indLen);
+void p_new_patient(indexPos *indexArr, int indLen);
+void p_existing_patient(indexPos *indexArr, int indLen);
+void p_patient_menu(indexPos *indexArr, int p_ID, int indLen);
+void p_update(indexPos *indexArr, int p_ID, int indLen);
 void p_weight(int p_ID);
-void p_intake(indexPos *indexArr, int p_ID);
+void p_intake(indexPos *indexArr, int p_ID, int indLen);
 void p_change(int p_ID);
 void p_print(int p_ID);
 int p_discharge(int p_ID);
@@ -53,14 +53,14 @@ main (void){
   }
   indexArr = index_database(&indLen, dtb);
 
-  p_main_menu(indexArr);
+  p_main_menu(indexArr, indLen);
   clear();
   free(indexArr);
   fclose(dtb);
   return 0;
 }
 
-void p_main_menu(indexPos *indexArr){
+void p_main_menu(indexPos *indexArr, int indLen){
 
   int choice;
   choice = 4;
@@ -74,19 +74,19 @@ void p_main_menu(indexPos *indexArr){
       }
 
       if (choice == 1){
-        p_new_patient(indexArr);
+        p_new_patient(indexArr, indLen);
         choice = RESET_OPTION;
       }
 
       else if (choice == 2){
-        p_existing_patient(indexArr);
+        p_existing_patient(indexArr, indLen);
         choice = RESET_OPTION;
       }
     }
   return;
 }
 
-void p_new_patient(indexPos *indexArr){
+void p_new_patient(indexPos *indexArr, int indLen){
   clear();
   /*Promt for input til ny patient*/
   /*Hardcoded*/
@@ -102,21 +102,21 @@ void p_new_patient(indexPos *indexArr){
 	add_person(&person);
 	add_condition_log(person, personLog);
 
-  p_patient_menu(indexArr, person.id);
+  p_patient_menu(indexArr, person.id, indLen);
   return;
 }
 
-void p_existing_patient(indexPos *indexArr){
+void p_existing_patient(indexPos *indexArr, int indLen){
   int p_ID;
   clear();
   printf("Main Menu/Patient Menu\n\n Enter patient ID\n>");
   scanf("\n%d", &p_ID);
-  p_patient_menu(indexArr, p_ID);
+  p_patient_menu(indexArr, p_ID, indLen);
   return;
 }
 
 
-void p_patient_menu(indexPos *indexArr, int p_ID){
+void p_patient_menu(indexPos *indexArr, int p_ID, int indLen){
   int choice;
   choice = RESET_OPTION;
   clear();
@@ -131,7 +131,7 @@ void p_patient_menu(indexPos *indexArr, int p_ID){
       }
 
     if (choice == 1){
-      p_update(indexArr, p_ID);
+      p_update(indexArr, p_ID, indLen);
       choice = RESET_OPTION;
     }
 
@@ -148,7 +148,7 @@ void p_patient_menu(indexPos *indexArr, int p_ID){
 }
 
 
-void p_update(indexPos *indexArr, int p_ID){
+void p_update(indexPos *indexArr, int p_ID, int indLen){
   int choice;
   choice = RESET_OPTION;
 
@@ -167,7 +167,7 @@ void p_update(indexPos *indexArr, int p_ID){
 
       else if (choice == 2)
       {
-        p_intake(indexArr, p_ID);
+        p_intake(indexArr, p_ID, indLen);
         choice = RESET_OPTION;
       }
 
@@ -231,9 +231,9 @@ void p_weight(int p_ID){
   return;
 }
 
-void p_intake(indexPos *indexArr, int p_ID){
+void p_intake(indexPos *indexArr, int p_ID, int indLen){
   /*Scan new intake*/
-  int choice, indLen = 0;
+  int choice;
   nutrition *meal;
   char dataFile[] = "Nutritional_database.txt";
   FILE *dtb;

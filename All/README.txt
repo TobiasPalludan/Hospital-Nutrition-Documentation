@@ -1,0 +1,2 @@
+For at compile og køre programmet så indtast make i commandoprompt :D
+Vi har allerede indlagt og screenet en patient med ID "1" som kan tilgåes. Desuden er det også frit slag for at oprette nye patienter i systemet. 
