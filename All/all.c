@@ -129,30 +129,29 @@ void p_patient_menu(int p_ID){
 
 void p_update(int p_ID){
   int choice;
-  clear();
-  printf("Main Menu/Patient Menu/Update patient data\n Patient #%d\n\n You have 4 choices\n *press 1 to enter new weight\n *press 2 to enter new intake\n *press 3 to change patient info\n\n *press 0 to go back to Patient menu\n\n>", p_ID);
-  scanf("\n%d", &choice);
+  choice = 4;
 
-  while (choice != 1 && choice != 2 && choice != 3 && choice != 0) {
-    printf("Please enter a valid choice\n");
-    scanf("\n%d", &choice);
-  }
 
-  if (choice == 1){
-    p_weight(p_ID);
-  }
+  while(choice != 0){
+    while (choice != 1 && choice != 2 && choice != 3 && choice != 0) {
+      clear();
+      printf("Main Menu/Patient Menu/Update patient data\n Patient #%d\n\n You have 4 choices\n *press 1 to enter new weight\n *press 2 to enter new intake\n *press 3 to change patient info\n\n *press 0 to go back to Patient menu\n\n>", p_ID);
+      scanf("\n%d", &choice);
+      }
 
-  if (choice == 2){
-    p_intake(p_ID);
-  }
+      if (choice == 1){
+        p_weight(p_ID);
+      }
 
-  if (choice == 3){
-    p_change(p_ID);
-  }
+      else if (choice == 2){
+        p_intake(p_ID);
+      }
 
-  if (choice == 0){
-    p_patient_menu(p_ID);
-  }
+      else if (choice == 3){
+        p_change(p_ID);
+      }
+    }
+  return;
 }
 
 void p_weight(int p_ID){
@@ -161,11 +160,11 @@ void p_weight(int p_ID){
   FILE* fileptr;
   char place[30], patient_data[100], uselesstime[100], date[20];
   sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
-  
+
   conditionHistory person;
 
   fileptr = fopen(place, "a+");
-    
+
   while(fgets(patient_data, PRINT_DATA_SIZE, fileptr) != NULL)
   {
     if(feof(fileptr))
@@ -173,17 +172,17 @@ void p_weight(int p_ID){
       break;
     }
   }
-  
+
 
   sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s | %s", uselesstime, &person.weight, &person.height, &person.bmi, &person.bmr, &person.temperature, person.illness, person.allergy);
-  
+
 
   /*Måske lave de næste 23 linjer til en funktion*/
   clear();
   printf("%s\n\n\n", patient_data);
   printf("Main Menu/Patient Menu/Update patient data/Weight Update\n Patient #%d\n\n Insert new weight or press 0 to go back to Patient_menu\n\n>", p_ID);
   scanf("\n%d", &choice);
-  
+
   if (choice != 0){
     datestamp(date);
     person.weight = choice;
@@ -276,8 +275,6 @@ void p_print(int p_ID){
 
 
   clear();
-  if (fileptr_log == NULL)
-  printf("NULL\n");
   printf("\nPlace : %s, Place_log: %s\n", place, place_log);
   printf("Main Menu/Patient Menu/Print patient info\n Patient #%d\n\n",  p_ID);
   printf("%s\n", patient_data);
