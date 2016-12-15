@@ -157,12 +157,17 @@ void p_update(int p_ID){
 void p_weight(int p_ID){
   /*Scan new weight*/
   int choice;
+  conditionHistory person;
   FILE* fileptr;
   char place[30], patient_data[100], uselesstime[100], date[20];
   sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
+<<<<<<< HEAD
 
   conditionHistory person;
 
+=======
+  
+>>>>>>> 6073f363756292827848c19b9e131d005816fff8
   fileptr = fopen(place, "a+");
 
   while(fgets(patient_data, PRINT_DATA_SIZE, fileptr) != NULL)
@@ -179,7 +184,6 @@ void p_weight(int p_ID){
 
   /*Måske lave de næste 23 linjer til en funktion*/
   clear();
-  printf("%s\n\n\n", patient_data);
   printf("Main Menu/Patient Menu/Update patient data/Weight Update\n Patient #%d\n\n Insert new weight or press 0 to go back to Patient_menu\n\n>", p_ID);
   scanf("\n%d", &choice);
 
@@ -232,12 +236,41 @@ void p_intake(int p_ID){
 
 void p_change(int p_ID){
   /*Change patient data/info*/
-  int choice;
-  clear();
-  printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n\n Insert updated patient info or press 0 to go back to Patient_menu\n\n>", p_ID);
-  scanf("\n%d", &choice);
+  FILE* fileptr;
+  conditionHistory person;
+  double choice;
+  char place[30], patient_data[100], uselesstime[100], date[20];
+
+  sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
+
+  fileptr = fopen(place, "a+");
+
+  while(fgets(patient_data, PRINT_DATA_SIZE, fileptr) != NULL)
+  {
+    if(feof(fileptr))
+    {
+      break;
+    }
+  }
+  
+  clear(); 
+  sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s | %s", uselesstime, &person.weight, &person.height, &person.bmi, &person.bmr, &person.temperature, person.illness, person.allergy);
+  
+  printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n\nInsert updated patient info in the order: weight, height, BMI, BMR, temperature, illness og allergy \n\n or press 0 to go back to Patient_menu", p_ID);
+  printf("\n\n%s\n", "Persondata foer aendring");
+  printf("\n%s\n\n>", patient_data); 
+  scanf("\n%lf %lf %lf %d %lf %s %s",&choice, &person.height, &person.bmi, &person.bmr, &person.temperature, person.illness, person.allergy);
 
   if (choice != 0){
+    person.weight = choice;
+    datestamp(date);
+  
+    printf("%s\n", "Persondata efter aendring");
+    printf("\n%s | %.2lf | %.2lf | %.2lf | %d | %.2lf | %s | %s", date, person.weight, person.height, person.bmi, person.bmr, person.temperature, person.illness, person.allergy);
+ 
+    fprintf(fileptr, "\n%s | %.2lf | %.2lf | %.2lf | %d | %.2lf | %s | %s", date, person.weight, person.height, person.bmi, person.bmr, person.temperature, person.illness, person.allergy);
+    fclose(fileptr);
+
     printf("\nPatient info is updated\n *press 0 to go back to Patient_menu\n\n>");
     scanf("\n%d", &choice);
     if (choice == 0){
