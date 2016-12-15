@@ -158,11 +158,39 @@ void p_update(int p_ID){
 void p_weight(int p_ID){
   /*Scan new weight*/
   int choice;
+  FILE* fileptr;
+  char place[30], patient_data[100], uselesstime[100], date[20];
+  sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
+  
+  conditionHistory person;
+
+  fileptr = fopen(place, "a+");
+    
+  while(fgets(patient_data, PRINT_DATA_SIZE, fileptr) != NULL)
+  {
+    if(feof(fileptr))
+    {
+      break;
+    }
+  }
+  
+
+  sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s | %s", uselesstime, &person.weight, &person.height, &person.bmi, &person.bmr, &person.temperature, person.illness, person.allergy);
+  
+
+  /*Måske lave de næste 23 linjer til en funktion*/
   clear();
+  printf("%s\n\n\n", patient_data);
   printf("Main Menu/Patient Menu/Update patient data/Weight Update\n Patient #%d\n\n Insert new weight or press 0 to go back to Patient_menu\n\n>", p_ID);
   scanf("\n%d", &choice);
-
+  
   if (choice != 0){
+    datestamp(date);
+    person.weight = choice;
+    fprintf(fileptr, "\n%s | %.2lf | %.2lf | %.2lf | %d | %.2lf | %s | %s", date, person.weight, person.height, person.bmi, person.bmr, person.temperature, person.illness, person.allergy);
+    fclose(fileptr);
+
+
     printf("\nThe new patient weight is registered\n *press 0 to go back to Patient_menu\n\n>");
     scanf("\n%d", &choice);
     if (choice == 0){
@@ -226,25 +254,34 @@ void p_change(int p_ID){
 void p_print(int p_ID){
   /*Print patient data*/
   FILE *fileptr, *fileptr_log;
-  char place[30], place_log[30], patient_data[100], patient_data_log[100];
-  sprintf(place, "%s%d/%d ID.txt", FILE_PATH, p_ID, p_ID);
-  sprintf(place_log, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
+  int choice;
+  char place[30],  patient_data[200], place_log[30], patient_data_log[200];
+
+  sprintf(place, "%s%d/%d ID.txt\0", FILE_PATH, p_ID, p_ID);
+  sprintf(place_log, "%s%d/%d condition.txt\0", FILE_PATH, p_ID, p_ID);
 
   fileptr = fopen(place, "r");
-  fgets(patient_data, PRINT_DATA_SIZE, fileptr);
-  fclose(fileptr);
-
-
   fileptr_log = fopen(place_log, "r");
-  while(!feof(fileptr_log)){
-    fgets(patient_data_log, PRINT_DATA_SIZE, fileptr_log);
+
+
+  fgets(patient_data, PRINT_DATA_SIZE, fileptr);
+  while(fgets(patient_data_log, PRINT_DATA_SIZE, fileptr_log)!=NULL){
+    if (feof(fileptr_log))
+    break;
     }
+
+  fclose(fileptr);
   fclose(fileptr_log);
 
-  int choice;
+
+
   clear();
+  if (fileptr_log == NULL)
+  printf("NULL\n");
+  printf("\nPlace : %s, Place_log: %s\n", place, place_log);
   printf("Main Menu/Patient Menu/Print patient info\n Patient #%d\n\n",  p_ID);
   printf("%s\n", patient_data);
+
   printf("%s\n\n", patient_data_log);
   printf("*press 0 to return to patient menu\n\n>");
   scanf("\n%d", &choice);
