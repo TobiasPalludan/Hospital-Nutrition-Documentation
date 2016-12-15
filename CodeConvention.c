@@ -76,7 +76,20 @@ int ask_for_coordinates(int coordinateArr[])
 	{
 		/* First line of code */
 		/* Second line of code */
-	} else { /* Eneste undtagelse til reglen om "brackets på næste linje" */
+	}
+	else if (a > b)
+	{
+		/* First line of code */
+		/* Second line of code */
+	}
+
+	if(a < b)
+	{
+		/* First line of code */
+		/* Second line of code */
+	} 
+	else (a > b)
+	{
 		/* First line of code */
 		/* Second line of code */
 	}

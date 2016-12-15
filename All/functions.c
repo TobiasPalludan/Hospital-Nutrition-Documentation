@@ -1,101 +1,130 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include <direct.h>
-#include "Lib.c"
+#include "functions.h"
 
-#define DEPARTMENT_SIZE 15
-#define NAME_SIZE 30
-#define ALLERGY_SIZE 50
-#define PREFERENCES_SIZE 100
-#define ILLNESS_SIZE 100
-#define TIME_STAMP_SIZE 18
-#define DISH_NAME_SIZE 20
-#define INGREDIENTS_SIZE 20
-#define FILE_NAME_SIZE 25
-#define LOG_FILE_SIZE 200
-#define MAX_LOG_ENTRIES 10
+/* We calculate BMI from the standard equation */
+double BMI(double height, double weight){
+  height = height / 100;
 
-#define FILE_PATH "patients/"
-#define INDEX_FILE_NAME "PatientIndex.txt"
-
-
-typedef struct personInfo /* Struct for containing information for a person in the system */
-{
-	int id;
-	char department[DEPARTMENT_SIZE];
-	int cprNumber;
-	char name[NAME_SIZE];
-	char allergy[ALLERGY_SIZE];
-	char illness[ILLNESS_SIZE];
-	int weight;
-	int height;
-	double bmi;
-	int bmr;
-	double temperature;
-}personInfo;
-
-typedef struct nutritionIntake /* struck for adding a nutrition intake to a intake history */
-{
-	char  ingredient[INGREDIENTS_SIZE];
-	int   kiloJoule;
-	float protein;
-	int	  amount;
-} nutritionIntake;
-
-typedef struct conditionHistory /* struct for adding a condition log to a condition history */
-{
-	int weight;
-	int height;
-	double bmi;
-	int bmr;
-	double temperature;
-	char illness[ILLNESS_SIZE];
-	char allergy[ALLERGY_SIZE];
-}conditionHistory;
-
-void add_person(personInfo *person);
-void add_food_intake(personInfo person, nutritionIntake intake[]);
-void add_condition_log(personInfo person, conditionHistory conditionLog);
-void make_patient_folder(char *string);
-void make_folder(personInfo person);
-void save_in_file(FILE *filePtr, char string[], char fileName[]);
-void update_index_file(personInfo *person);
-int find_index(FILE *filePtr, char fileName[]);
-
-int main(void)
-{
-	
-	/* remove this when functions for adding real patients is there*/
-	personInfo Casper = { 3, "afdeling 1", 1110954441, "Casper", "graes", "feber"};
-
-	nutritionIntake feedCasper[3] = {
-										{"Kartofler med Sovs", 2000, 50.2, 150 },
-										{"Kartofler", 1500, 10.2, 100},
-										{"Sovs", 500, 40, 50 }
-									};
-	conditionHistory CasperErSygLog = {70, 192, 23.1, 2400, 41.7, "feber", "graes" };
-
-	add_person(&Casper);
-	add_food_intake(Casper, feedCasper);
-	add_condition_log(Casper, CasperErSygLog);
-	
-	return 0;
+  return weight / (height * height);
 }
+
+/* We calculate BMR from the standard equation and in proportion to gender */
+double BMR(double height, double weight, long long int cpr){
+  double BMR;
+  int age;
+
+  /* We get the age */
+  age = get_age(cpr);
+
+  /* Last digit in CPR determine gender. Even number = Female. Odd number = Male. */
+  if (cpr % 2 == 0)
+  {
+    BMR = 665.0955 + 9.5634 * weight + 1.8496 * height - 4.6756 * age;
+  }
+
+  else if (cpr % 2 != 0)
+  {
+    BMR = 66.5 + 13.7516 * weight + 5.0033 * height - 6.755 * age;
+  }
+
+  return BMR;
+}
+
+/* Based on the current day we find the age. */
+int get_age(long long int cpr){
+  int age, dateofbirth, year, month, day, temp, n_7;
+
+  time_t t = time(NULL);
+  struct tm tm = *localtime(&t);
+
+  dateofbirth = cpr / 10000;
+  n_7 = (cpr / 1000) % 10;
+  year = (dateofbirth % 100) + 1900;
+  temp = dateofbirth / 100;
+  month = temp % 100;
+  temp = temp/ 100;
+  day = temp % 100;
+
+
+  if ((n_7 == 4 || n_7 == 9 && year < 1937) )
+    year = year + 100;
+
+  else if (n_7 > 4 && n_7 < 1958 )
+    year = year + 100;
+
+
+  age = (tm.tm_year + 1900) - year;
+
+  /* Checks if the person has had birthday this yeah with months and days */
+  if (month > tm.tm_mon + 1)
+    --age;
+
+  else if (month == (tm.tm_mon + 1) && day > tm.tm_mday)
+    --age;
+
+  return age;
+}
+
+/* We get the current day by using the library time.h */
+void datestamp(char output[]){
+  time_t t = time(NULL);
+  struct tm tm = *localtime(&t);
+
+  sprintf(output, "%2d-%2d-%4d %2d:%2d", tm.tm_mday, tm.tm_mon + 1,
+                tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+}
+
+/* Prints a warning depending on warning_BMI's return value. */
+void print_warning( FILE *filPointer, int tilstand)
+{
+    if(tilstand == 1)
+    {
+        fprintf(filPointer, "%s\n", "BMI er under 18,5.");
+    }
+    else if(tilstand == 0)
+    {
+        fprintf(filPointer, "%s\n", "BMI er mellem 25 og 30.");
+    }
+    else if(tilstand == -1)
+    {
+        fprintf(filPointer, "%s\n", "BMI er over 30.");
+    }
+}
+
+/* Returns a value depending on BMI */
+int warning_BMI(double BMI)
+{
+    if (BMI < 18.5)
+        return 1;
+
+    else if (BMI >= 25 && BMI <= 30)
+        return 0;
+
+    else if(BMI > 30)
+        return -1;
+    else
+        return 2;
+}
+
+/*From filehandler.c*/
 
 void add_person(personInfo *person)		/* Function for adding a person the the system      */
 {										/* Calls the function for creating the index aswell */
 	FILE *personFilePtr;
 
-	update_index_file(person);
 	make_patient_folder(FILE_PATH);
+	update_index_file(person);
 	make_folder(*person);
 
 	char fileName[FILE_NAME_SIZE],
 		 log[LOG_FILE_SIZE];
 
 	sprintf(fileName, "%s%d/%d ID.txt", FILE_PATH, person->id, person->id); /*Creates file name from ID of the person*/
-	sprintf(log, "%d, %s, %d, %s, %s\n", person->id, person->department, person->cprNumber, person->name, person->allergy);/*Pulls log indformation from stuct*/
+	sprintf(log, "%d, %s, %.10lld, %s, %s\n", person->id, person->department, person->cprNumber, person->name, person->allergy);/*Pulls log indformation from stuct*/
 	save_in_file(personFilePtr, log, fileName);
 }
 
@@ -140,9 +169,13 @@ void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds
 		 log[LOG_FILE_SIZE],
 		 timeStamp[TIME_STAMP_SIZE];
 
+  conditionLog.bmi = BMI(conditionLog.height, conditionLog.weight);
+  conditionLog.bmr = BMR(conditionLog.height, conditionLog.weight, person.cprNumber);
+
+
 	datestamp(timeStamp);
 	sprintf(fileName, "%s%d/%d condition.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
-	sprintf(log, "%18s | %3d | %3d | %3.2lf | %4d | %4.2lf | %30s | %30s\n", timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness, conditionLog.allergy); /*Creates file name from ID of the person*/
+	sprintf(log, "%18s | %3lf | %3lf | %3.2lf | %4d | %4.2lf | %30s | %30s\n", timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness, conditionLog.allergy); /*Creates file name from ID of the person*/
 	save_in_file(condtionFilePtr, log, fileName);
 }
 
@@ -216,8 +249,7 @@ int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest
 		fclose(filePtr);
 		return index + 1;
 	}
-	else 
-	{
+	else {
 		fclose(filePtr);
 		return 1;
 	}
