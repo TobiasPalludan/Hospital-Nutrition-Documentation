@@ -87,8 +87,8 @@ void add_person(personInfo *person)		/* Function for adding a person the the sys
 {										/* Calls the function for creating the index aswell */
 	FILE *personFilePtr;
 
-	make_patient_folder(FILE_PATH);
 	update_index_file(person);
+	make_patient_folder(FILE_PATH);
 	make_folder(*person);
 
 	char fileName[FILE_NAME_SIZE],
@@ -216,7 +216,8 @@ int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest
 		fclose(filePtr);
 		return index + 1;
 	}
-	else {
+	else 
+	{
 		fclose(filePtr);
 		return 1;
 	}
