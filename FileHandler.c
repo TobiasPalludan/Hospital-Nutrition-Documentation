@@ -23,16 +23,16 @@
 typedef struct personInfo /* Struct for containing information for a person in the system */
 {
 	int id;
-	char department[DEPARTMENT_SIZE];
-	int cprNumber;
-	char name[NAME_SIZE];
-	char allergy[ALLERGY_SIZE];
-	char illness[ILLNESS_SIZE];
-	int weight;
-	int height;
-	double bmi;
-	int bmr;
-	double temperature;
+	char	department[DEPARTMENT_SIZE];
+	int		cprNumber;
+	char	name[NAME_SIZE];
+	char	allergy[ALLERGY_SIZE];
+	char	illness[ILLNESS_SIZE];
+	int		weight;
+	int		height;
+	double	bmi;
+	int		bmr;
+	double	temperature;
 }personInfo;
 
 typedef struct nutritionIntake /* struck for adding a nutrition intake to a intake history */
@@ -41,17 +41,18 @@ typedef struct nutritionIntake /* struck for adding a nutrition intake to a inta
 	int   kiloJoule;
 	float protein;
 	int	  amount;
+	int	  noIngredients;
 } nutritionIntake;
 
 typedef struct conditionHistory /* struct for adding a condition log to a condition history */
 {
-	int weight;
-	int height;
-	double bmi;
-	int bmr;
-	double temperature;
-	char illness[ILLNESS_SIZE];
-	char allergy[ALLERGY_SIZE];
+	int		weight;
+	int		height;
+	double	bmi;
+	int		bmr;
+	double	temperature;
+	char	illness[ILLNESS_SIZE];
+	char	allergy[ALLERGY_SIZE];
 }conditionHistory;
 
 void add_person(personInfo *person);
@@ -70,9 +71,9 @@ int main(void)
 	personInfo Casper = { 3, "afdeling 1", 1110954441, "Casper", "graes", "feber"};
 
 	nutritionIntake feedCasper[3] = {
-										{"Kartofler med Sovs", 2000, 50.2, 150 },
-										{"Kartofler", 1500, 10.2, 100},
-										{"Sovs", 500, 40, 50 }
+										{"Kartofler med Sovs", 2000, 50.2, 150, 3},
+										{"Kartofler", 1500, 10.2, 100, 3},
+										{"Sovs", 500, 40, 50, 3}
 									};
 	conditionHistory CasperErSygLog = {70, 192, 23.1, 2400, 41.7, "feber", "graes" };
 
@@ -107,17 +108,15 @@ void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food
 	FILE *foodFilePtr;
 
 	char fileName[FILE_NAME_SIZE],
-		 log[LOG_FILE_SIZE],
-		 timeStamp[TIME_STAMP_SIZE];
+		log[LOG_FILE_SIZE],
+		timeStamp[TIME_STAMP_SIZE];
 
 	datestamp(timeStamp);
-	/* int a = sizeof(nutritionIntake) / sizeof(intake[0]); */
-	/* printf("size of struct arr %d\n", a); */
 
 	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
 	printf("%s\n", fileName);
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < intake[0].noIngredients; i++)
 	{
 		if (i == 0)					/* Print the dish name,total nutrition, and a timestamp */
 		{
