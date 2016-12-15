@@ -147,13 +147,14 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 
     puts("\nScan your ingredients and amount in grams. (Type 'Exit' or 'e' to stop):");
     puts("Example format: \"food 123\"");
-
-    do
-    {
+	
 	/*  
 	 *  Scan the ingredients you are using.
 	 *  Does not matter if you are using uppercase or lowercase
 	 */
+    do
+    {
+	
         scanf(" %s", &foodArr[i].ingredientName);
         stringarrToLowercase(foodArr[i].ingredientName);
 
