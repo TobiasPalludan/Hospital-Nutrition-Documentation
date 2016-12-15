@@ -11,11 +11,11 @@
 /* Structs */
 typedef struct nutrition 
 {
-	char  dish[MAX_CHARS];
 	char  ingredient[MAX_CHARS];
 	int   kiloJoule;
 	double protein;
 	double weight;
+	int noIngredients;
 } nutrition;
 
 typedef struct indexPos
@@ -59,8 +59,8 @@ int main(void)
 
 	/* Ask for ingredient */
 	meal = ingredient_prompt(indLen, indexArr, dtb);
-	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\n", 
-		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight);
+	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\nNo: %d ingredients\n", 
+		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight, meal[0].noIngredients);
 
 	/* Free all dynamically allocated arrays, and close database */
 	free(indexArr);
@@ -238,7 +238,8 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 
 				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
 				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
-				dish[0].weight	  += dish[i].weight;
+				dish[0].weight	  +=  dish[i].weight;
+				dish[0].noIngredients = noSearchTerms - 1;
 			}
 		}
 	}
