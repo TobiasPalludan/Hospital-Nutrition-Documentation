@@ -8,7 +8,7 @@
 #define DATABASE_DEPTH 15
 #define MAX_INDEX 100
 
-/* Structs */
+/* Struct, where element 0 is the meal, and element >0 is a part of the meal */
 typedef struct nutrition 
 {
 	char  ingredient[MAX_CHARS];
@@ -139,8 +139,8 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 	i = 0;
 	printf("\nWhat dish do you want to make?\n");
 	scanf(" %[A-z, ]", dish[0].ingredient);
-	dish[0].kiloJoule =  0;
-	dish[0].protein =  0;
+	dish[0].kiloJoule  = 0;
+	dish[0].protein  = 0;
 	dish[0].weight = 0;
 	i++;
 	noSearchTerms++;
@@ -224,6 +224,24 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 		for(int j = 0; j < noHits; j++)
 		{
 			if(temp == j)
+			{
+				printf("You choose: %s\n", searchArr[j].ingredientName);
+				puts("");
+				
+				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
+					fgets(tempLine, MAX_LINE_LEN, dtb);
+				else
+					exit(EXIT_FAILURE);
+
+				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
+				dish[i].weight = weight[i];
+
+				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
+				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[0].weight	  +=  dish[i].weight;
+				dish[0].noIngredients = noSearchTerms - 1;
+			} 
+			else if(temp == i)
 			{
 				printf("You choose: %s\n", searchArr[j].ingredientName);
 				puts("");
