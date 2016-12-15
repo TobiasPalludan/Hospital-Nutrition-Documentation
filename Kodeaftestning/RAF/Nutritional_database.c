@@ -9,7 +9,7 @@
 #define MAX_INDEX 100
 
 /* Struct, where element 0 is the meal, and element >0 is a part of the meal */
-typedef struct nutrition 
+typedef struct nutrition
 {
 	char  ingredient[MAX_CHARS];
 	int   kiloJoule;
@@ -36,7 +36,7 @@ indexPos* index_database(int *indLen, FILE *dtb);
 void load_index(FILE *ind, indexPos *indexArr, int indLen);
 nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb);
 void stringarrToLowercase(char *stringArr);
-nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX], 
+nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX],
 						 FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[]);
 
 int main(void)
@@ -59,7 +59,7 @@ int main(void)
 
 	/* Ask for ingredient */
 	meal = ingredient_prompt(indLen, indexArr, dtb);
-	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\nNo: %d ingredients\n", 
+	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\nNo: %d ingredients\n",
 		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight, meal[0].noIngredients);
 
 	/* Free all dynamically allocated arrays, and close database */
@@ -79,8 +79,8 @@ int main(void)
  */
 indexPos* index_database(int *indLen, FILE *dtb)
 {
-	/* 
-	 * Only to be called once per runtime. Will load the index file, 
+	/*
+	 * Only to be called once per runtime. Will load the index file,
 	 * and return a pointer through parameter.
 	 */
 	indexPos *indexArr = malloc(DATABASE_DEPTH * sizeof(indexPos));
@@ -147,14 +147,14 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 
     puts("\nScan your ingredients and amount in grams. (Type 'Exit' or 'e' to stop):");
     puts("Example format: \"food 123\"");
-	
-	/*  
+
+	/*
 	 *  Scan the ingredients you are using.
 	 *  Does not matter if you are using uppercase or lowercase
 	 */
     do
     {
-	
+
         scanf(" %s", &foodArr[i].ingredientName);
         stringarrToLowercase(foodArr[i].ingredientName);
 
@@ -162,12 +162,12 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
             break;
 
         scanf(" %lf", &weight[i]);
-        
+
         noSearchTerms++;
         i++;
     } while (strcmp(foodArr[i - 1].ingredientName, "exit") != 0);
 
-	/* 
+	/*
 	 * These forloops converts the tempString and ingredient names in the index
 	 * to lowercase. That is why it does not matter if you are using uppercase
 	 * or lowercase in the scanf above.
@@ -185,7 +185,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 	return dish;
 }
 
-nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX], 
+nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX],
 							   FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[])
 {
 	int i, j, temp;
@@ -198,7 +198,7 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 		{
 			/*
 			 * Searches for all instances of the ingredient in the search array.
-			 */ 
+			 */
 			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
 				strcpy(searchArr[noHits].ingredientName, indexArr[j].ingredientName);
@@ -228,7 +228,7 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 			{
 				printf("You choose: %s\n", searchArr[j].ingredientName);
 				puts("");
-				
+
 				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
 					fgets(tempLine, MAX_LINE_LEN, dtb);
 				else
@@ -241,12 +241,12 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
 				dish[0].weight	  +=  dish[i].weight;
 				dish[0].noIngredients = noSearchTerms - 1;
-			} 
+			}
 			else if(temp == i)
 			{
 				printf("You choose: %s\n", searchArr[j].ingredientName);
 				puts("");
-				
+
 				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
 					fgets(tempLine, MAX_LINE_LEN, dtb);
 				else
@@ -273,14 +273,3 @@ void stringarrToLowercase(char *string)
 		string[i] = tolower(string[i]);
 	}
 }
-
-/*
-nutrition load_ingredient(char *ingredient, int kiloJoule, float protein)
-{
-	nutrition result;
-	strcpy(result.ingredient, ingredient);
-	result.kiloJoule = kiloJoule;
-	result.protein = protein;
-
-	return result;
-}*/

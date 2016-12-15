@@ -74,7 +74,7 @@ void datestamp(char output[]){
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
 
-  sprintf(output, "%2d-%2d-%4d %2d:%2d", tm.tm_mday, tm.tm_mon + 1,
+  sprintf(output, "%.2d-%.2d-%.4d %.2d:%.2d", tm.tm_mday, tm.tm_mon + 1,
                 tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
@@ -151,12 +151,12 @@ void add_food_intake(personInfo person, nutritionIntake intake[]) /* Adds a food
 		if (i == 0)					/* Print the dish name,total nutrition, and a timestamp */
 		{
 			printf("first");
-			sprintf(log, "%19s  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
+			sprintf(log, "%16s  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
 			save_in_file(foodFilePtr, log, fileName);
 		}
 		else						/* Print the engredients of the dish */
 		{
-			sprintf(log, "                     | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
+			sprintf(log, "                  | %25s | %5dKJ. | %7.2lfg. | %5dg.\n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].amount);
 			save_in_file(foodFilePtr, log, fileName);
 		}
 	}

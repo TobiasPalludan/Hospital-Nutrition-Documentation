@@ -153,7 +153,7 @@ void p_update(int p_ID){
         p_intake(p_ID);
         choice = RESET_OPTION;
       }
-      
+
       else if (choice == 3)
       {
         p_change(p_ID);
@@ -223,7 +223,7 @@ void p_intake(int p_ID){
 
   if (choice != 0){
     /*Hardcoded*/
-    personInfo Casper = { 2, "afdeling 1", 1110954441, "Casper", "noddeallergi", "feber"};
+    personInfo Casper = { p_ID, "afdeling 1", 1110954441, "Casper", "noddeallergi", "feber"};
     nutritionIntake feedCasper[3] = {
                       {"Kartofler med Sovs", 2000, 50.2, 150 },
                       {"Kartofler", 1500, 10.2, 100},

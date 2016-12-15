@@ -1,0 +1,18 @@
+   15-12-2016 15: 8  |        Kartofler med Sovs |  2000KJ. |   50.20g. |   150g.
+                     |                 Kartofler |  1500KJ. |   10.20g. |   100g.
+                     |                      Sovs |   500KJ. |   40.00g. |    50g.
+    15-12-2016 15: 9  |        Kartofler med Sovs |  2000KJ. |   50.20g. |   150g.
+                     |                 Kartofler |  1500KJ. |   10.20g. |   100g.
+                     |                      Sovs |   500KJ. |   40.00g. |    50g.
+    15-12-2016 15:10  |        Kartofler med Sovs |  2000KJ. |   50.20g. |   150g.
+                     |                 Kartofler |  1500KJ. |   10.20g. |   100g.
+                     |                      Sovs |   500KJ. |   40.00g. |    50g.
+    15-12-2016 15:11  |        Kartofler med Sovs |  2000KJ. |   50.20g. |   150g.
+                     |                 Kartofler |  1500KJ. |   10.20g. |   100g.
+                     |                      Sovs |   500KJ. |   40.00g. |    50g.
+15-12-2016 15:13  |        Kartofler med Sovs |  2000KJ. |   50.20g. |   150g.
+                     |                 Kartofler |  1500KJ. |   10.20g. |   100g.
+                     |                      Sovs |   500KJ. |   40.00g. |    50g.
+15-12-2016 15:13  |        Kartofler med Sovs |  2000KJ. |   50.20g. |   150g.
+                  |                 Kartofler |  1500KJ. |   10.20g. |   100g.
+                  |                      Sovs |   500KJ. |   40.00g. |    50g.
