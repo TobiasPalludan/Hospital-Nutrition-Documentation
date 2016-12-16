@@ -174,9 +174,9 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 				dish[0].kiloJoule += dish[i].kiloJoule;
 
 				dish[i].protein   += (dish[i].weight / 100) * dish[i].protein;
-				dish[i].protein    = dish[i].protein;
+				dish[0].protein   += dish[i].protein;
 
-				dish[0].weight	  +=  dish[i].weight;
+				dish[i].weight	  +=  dish[i].weight;
 				dish[0].noIngredients = noSearchTerms - 1;
 			}
 		}

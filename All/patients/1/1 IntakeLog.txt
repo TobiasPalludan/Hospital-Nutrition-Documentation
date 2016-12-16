@@ -1,4 +1,6 @@
 15-12-2016 21:48  |                 Aftensmad 		 |   677KJ. |    0.00g. |     0g.
                   |              Onion, raw		 |    42KJ. |    7.59g. |     0g.
                   |               Beef, raw		 |   635KJ. |   40.80g. |     0g.
-	
+	16-12-2016 09:38  |                 Aftensmad |   677KJ. |   48.39g.
+                  |               Beef, raw		 |   635KJ. |   40.80g.
+                  |              Onion, raw		 |    42KJ. |    7.59g.
