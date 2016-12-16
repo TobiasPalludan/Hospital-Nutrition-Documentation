@@ -60,6 +60,7 @@ typedef struct nutrition
 	char  ingredient[MAX_CHARS];
 	int   kiloJoule;
 	double protein;
+	double fat;
 	double weight;
 	int noIngredients;
 } nutrition;

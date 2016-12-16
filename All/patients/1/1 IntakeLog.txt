@@ -4,3 +4,111 @@
 	16-12-2016 09:38  |                 Aftensmad |   677KJ. |   48.39g.
                   |               Beef, raw		 |   635KJ. |   40.80g.
                   |              Onion, raw		 |    42KJ. |    7.59g.
+16-12-2016 09:52  |                 Aftensmad |    42KJ. |    0.69g.
+                  |              Onion, raw		 |    42KJ. |    0.69g.
+                  |                           |     0KJ. |    0.00g.'
+
+16-12-2016 10:02  |                 Aftensmad		 |  2325KJ. | 68.1g. 	| 27.6g
+                  |              Onion, raw		 |   420KJ. |    6.90g.
+                  |               Beef, raw		 |  1905KJ. |   61.20g.
+16-12-2016 10:06  |                 Aftensmad |    1055KJ. |   27.3g. |   12.0g
+                  |               Beef, raw		 |   635KJ. |   20.40g. |
+                  |              Onion, raw		 |   420KJ. |    6.90g. |
+16-12-2016 10:08  |                 Aftensmad |    1055KJ. |   27.3g. |   12.0g
+                  |              Onion, raw		 |     420KJ. |    6.9g. |
+                  |               Beef, raw		 |     635KJ. |   20.4g. |
+                  |                 Aftensmad |     483KJ. |    8.9g. |    5.0g
+                  |                Onion, raw |     420KJ. |    6.9g. |
+                  |                 Beef, raw |      63KJ. |    2.0g. |
+16-12-2016 10:15  |                           |     483KJ. |    8.9g. |    5.0g
+                  |                Onion, raw |     420KJ. |    6.9g. |
+                  |                 Beef, raw |      63KJ. |    2.0g. |
+16-12-2016 10:15  | Aftensmad |     677KJ. |   21.1g. |    8.2g
+                  |                 Beef, raw |     635KJ. |   20.4g. |
+                  |                Onion, raw |      42KJ. |    0.7g. |
+16-12-2016 10:17  |                 Aftensmad |     483KJ. |    8.9g. |    5.0g
+                  |              Onion, raw		 |     420KJ. |    6.9g. |
+                  |               Beef, raw		 |      63KJ. |    2.0g. |
+16-12-2016 10:17  |                           |     483KJ. |    8.9g. |    5.0g
+                  |              Onion, raw		 |     420KJ. |    6.9g. |
+                  |               Beef, raw		 |      63KJ. |    2.0g. |
+16-12-2016 10:18  | Aftensmad |     483KJ. |    8.9g. |    5.0g
+                  |              Onion, raw		 |     420KJ. |    6.9g. |
+                  |               Beef, raw		 |      63KJ. |    2.0g. |
+16-12-2016 10:23  | À |     483KJ. |    8.9g. |    5.0g
+                  |  |       0KJ. |    0.0g. |
+                  | Onion, raw		 |     420KJ. |    6.9g. |
+                  | Beef, raw		 |      63KJ. |    2.0g. |
+16-12-2016 10:23  | Aften |     677KJ. |   21.1g. |    8.2g
+                  | Beef, raw		 |     635KJ. |   20.4g. |
+                  | Onion, raw		 |      42KJ. |    0.7g. |
+
+16-12-2016 10:25  |                           |     483KJ. |    8.9g. |    5.0g
+                  |                           |     420KJ. |    6.9g. |
+                  |                           |      63KJ. |    2.0g. |
+
+16-12-2016 10:27  | Aftens |     483KJ. |    8.9g. |    5.0g
+                  | Onion, raw		 |     420KJ. |    6.9g. |
+                  | Beef, raw		 |      63KJ. |    2.0g. |
+
+16-12-2016 10:30   Aften Energi:     420KJ. Protein:    6.9g. Fat:    4.2g
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 
+                    Energi:       0KJ. Protein:    0.0g. Fat:    0.0g. 
+
+16-12-2016 10:30   Aften 		 Energi:     483KJ. Protein:    8.9g. Fat:    5.0g
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 
+                   Beef, raw		 Energi:      63KJ. Protein:    2.0g. Fat:    0.8g. 
+
+16-12-2016 10:31   		 Aftensmad Energi:     648KJ. Protein:   20.6g. Fat:    7.8g
+                    Energi:       0KJ. Protein:    0.0g. Fat:    0.0g. 
+                   Beef, raw		 Energi:     635KJ. Protein:   20.4g. Fat:    7.8g. 
+                   Spring onion, raw	 Energi:      13KJ. Protein:    0.2g. Fat:    0.0g. 
+
+16-12-2016 10:32   Mcd 		 Energi:     483KJ. Protein:    8.9g. Fat:    5.0g
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 
+                   Beef, raw		 Energi:      63KJ. Protein:    2.0g. Fat:    0.8g. 
+
+16-12-2016 10:33                         Mcd Energi:     139KJ. Protein:    1.8g. Fat:    0.2g
+                   Spring onion, raw	 Energi:     139KJ. Protein:    1.8g. Fat:    0.2g. 
+
+16-12-2016 10:34   Mcd                       Energi:     420KJ. Protein:    6.9g. Fat:    4.2g
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 
+
+16-12-2016 10:34   McD                   Energi:     483KJ. Protein:    8.9g. Fat:    5.0g
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 
+                   Beef, raw		 Energi:      63KJ. Protein:    2.0g. Fat:    0.8g. 
+
+16-12-2016 10:35   Aften                 Energi:     139KJ. Protein:    1.8g. Fat:    0.2g
+                   Spring onion, raw	    Energi:     139KJ. Protein:    1.8g. Fat:    0.2g. 
+
+16-12-2016 10:36   Aften                 Energi: 202    KJ. Protein: 3.8   g. Fat: 1.0   g
+                   Spring onion, raw	    Energi: 139    KJ. Protein: 1.8   g. Fat: 0.2   g. 
+                   Beef, raw		           Energi: 63     KJ. Protein: 2.0   g. Fat: 0.8   g. 
+
+16-12-2016 10:38   Mcd                   Energi:      63KJ. Protein:    2.0g. Fat:    0.8g
+
+                   Beef, raw		 Energi:      63KJ. Protein:    2.0g. Fat:    0.8g. 
+
+16-12-2016 10:38   Aftensmad             Energi:    1480KJ. Protein:   44.3g. Fat:   17.7g
+
+                   Beef, raw		 Energi:    1270KJ. Protein:   40.8g. Fat:   15.6g. 
+
+                   Onion, raw		 Energi:     210KJ. Protein:    3.5g. Fat:    2.1g. 
+
+                    Energi:       0KJ. Protein:    0.0g. Fat:    0.0g. 
+
+16-12-2016 10:40   Aftensmad             Energi:     648KJ. Protein:   20.6g. Fat:    7.8g
+
+                   Beef, raw		 Energi:     635KJ. Protein:   20.4g. Fat:    7.8g. 
+
+                   Spring onion, raw	 Energi:      13KJ. Protein:    0.2g. Fat:    0.0g. 
+
+16-12-2016 10:41   Aftensmad             Energi:    1055KJ. Protein:   27.3g. Fat:   12.0g
+
+                   Beef, raw		 Energi:     635KJ. Protein:   20.4g. Fat:    7.8g. 
+
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 
+
+16-12-2016 11:08   Aftensmad             Energi:     420KJ. Protein:    6.9g. Fat:    4.2g
+
+                   Onion, raw		 Energi:     420KJ. Protein:    6.9g. Fat:    4.2g. 

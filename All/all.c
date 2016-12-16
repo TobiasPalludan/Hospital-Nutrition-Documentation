@@ -255,8 +255,8 @@ void p_intake(indexPos *indexArr, int p_ID, int indLen){
 
   	/* Ask for ingredient */
   	meal = ingredient_prompt(indLen, indexArr, dtb);
-  	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g\nNo: %d ingredients\n",
-  		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].noIngredients);
+  	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g\nFat: %g g\nNo: %d ingredients\n",
+  		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].fat, meal[0].noIngredients);
 
   	/* Free all dynamically allocated arrays, and close database */
 

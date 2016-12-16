@@ -75,6 +75,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 	scanf(" %[A-z, ]", dish[0].ingredient);
 	dish[0].kiloJoule  = 0;
 	dish[0].protein  = 0;
+	dish[0].fat = 0;
 	dish[0].weight = 0;
 	i++;
 	noSearchTerms++;
@@ -122,7 +123,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX],
 							   FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[])
 {
-	int i, j, temp;
+	int i, j, temp, noErrors = 0;
 	char tempLine[MAX_LINE_LEN];
 	for (i = 1; i < noSearchTerms; i++)
 	{
@@ -154,6 +155,12 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 			printf("Print which one you would like: ");
 			scanf(" %d", &temp);
 		}
+		else if (noHits == 0)
+		{
+			printf("Error! Ingredient %s could not be recognized. Trying to continue!\n\n", foodArr[i].ingredientName);
+			noErrors++;
+			continue;
+		}
 
 		/* Retrieve data from database. Feed it to the dish struct. */
 		for(int j = 0; j < noHits; j++)
@@ -167,17 +174,20 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 				else
 					exit(EXIT_FAILURE);
 
-				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
+				sscanf(tempLine, " %[^0-9] %d %lf %lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein, &dish[i].fat);
 				dish[i].weight = weight[i];
 
 				dish[i].kiloJoule  = (dish[i].weight / 100) * dish[i].kiloJoule;
 				dish[0].kiloJoule += dish[i].kiloJoule;
 
-				dish[i].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[i].protein   = (dish[i].weight / 100) * dish[i].protein;
 				dish[0].protein   += dish[i].protein;
 
-				dish[i].weight	  +=  dish[i].weight;
-				dish[0].noIngredients = noSearchTerms - 1;
+				dish[i].fat = (dish[i].weight / 100) * dish[i].fat;
+				dish[0].fat += dish[i].fat;
+
+				dish[i].weight	  =  dish[i].weight;
+				dish[0].noIngredients = noSearchTerms - 1 - noErrors;
 			}
 		}
 	}

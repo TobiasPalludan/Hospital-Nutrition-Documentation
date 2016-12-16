@@ -150,14 +150,14 @@ void add_food_intake(int p_ID, nutrition intake[]) /* Adds a food intake to the 
 	{
 		if (i == 0)					/* Print the dish name,total nutrition, and a timestamp */
 		{
-			printf("first");
-			sprintf(log, "%16s  | %25s | %5dKJ. | %7.2lfg.\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein);
+			sprintf(log, "\n%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
 			save_in_file(foodFilePtr, log, fileName);
 		}
 		else						/* Print the engredients of the dish */
 		{
-			sprintf(log, "                  | %25s | %5dKJ. | %7.2lfg.\n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein);
-			save_in_file(foodFilePtr, log, fileName);
+      if (intake[i].kiloJoule != 0){
+			  sprintf(log, "\n                   %s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g. \n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
+			  save_in_file(foodFilePtr, log, fileName);}
 		}
 	}
 }
