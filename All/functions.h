@@ -27,13 +27,6 @@ typedef struct personInfo /* Struct for containing information for a person in t
 	char department[DEPARTMENT_SIZE];
 	long long int cprNumber;
 	char name[NAME_SIZE];
-	char allergy[ALLERGY_SIZE];
-	char illness[ILLNESS_SIZE];
-	double weight;
-	double height;
-	double bmi;
-	int bmr;
-	double temperature;
 }personInfo;
 
 typedef struct nutritionIntake /* struck for adding a nutrition intake to a intake history */
@@ -52,7 +45,6 @@ typedef struct conditionHistory /* struct for adding a condition log to a condit
 	int bmr;
 	double temperature;
 	char illness[ILLNESS_SIZE];
-	char allergy[ALLERGY_SIZE];
 }conditionHistory;
 
 typedef struct nutrition
@@ -84,7 +76,7 @@ double BMI(double height, double weight);
 double BMR(double height, double weight, long long int cpr);
 int get_age(long long int cpr);
 void datestamp(char output[]);
-void print_warning( FILE *filPointer, int tilstand);
+void print_warning(double BMI);
 int warning_BMI(double BMI);
 
 /*Filehandler prototypes*/

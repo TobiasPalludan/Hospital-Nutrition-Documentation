@@ -28,7 +28,7 @@ indexPos* index_database(int *indLen, FILE *dtb)
 	/* Database is open. We check if it's empty. If not we skip the first descriptive line */
 	fgetsPtr = fgets(tempString, MAX_LINE_LEN, dtb);
 	if(fgetsPtr == NULL) {
-		puts("The database is completely empty.");
+		puts("The database is completely empty.\n");
 		exit(EXIT_FAILURE);
 	}
 

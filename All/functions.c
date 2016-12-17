@@ -14,7 +14,7 @@ double BMI(double height, double weight){
 
 /* We calculate BMR from the standard equation and in proportion to gender */
 double BMR(double height, double weight, long long int cpr){
-  double BMR;
+  const double c_1 = 665.0955, c_2 = 9.5634, c_3 = 1.8496, c_4 = 4.6756, c_5 = 66.5, c_6 = 13.7516, c_7 = 5.0033, c_8 = 6.755;
   int age;
 
   /* We get the age */
@@ -23,15 +23,13 @@ double BMR(double height, double weight, long long int cpr){
   /* Last digit in CPR determine gender. Even number = Female. Odd number = Male. */
   if (cpr % 2 == 0)
   {
-    BMR = 665.0955 + 9.5634 * weight + 1.8496 * height - 4.6756 * age;
+    return c_1 + c_2 * weight + c_3 * height - c_4 * age;
   }
 
   else if (cpr % 2 != 0)
   {
-    BMR = 66.5 + 13.7516 * weight + 5.0033 * height - 6.755 * age;
+    return c_5 + c_6 * weight + c_7 * height - c_8 * age;
   }
-
-  return BMR;
 }
 
 /* Based on the current day we find the age. */
@@ -79,19 +77,22 @@ void datestamp(char output[]){
 }
 
 /* Prints a warning depending on warning_BMI's return value. */
-void print_warning( FILE *filPointer, int tilstand)
+void print_warning(double BMI)
 {
+  int tilstand;
+  tilstand = warning_BMI(BMI);
+
     if(tilstand == 1)
     {
-        fprintf(filPointer, "%s\n", "BMI er under 18,5.");
+        printf("\n WARNING: BMI is under 18,5.\n");
     }
-    else if(tilstand == 0)
+    else if(tilstand == 2)
     {
-        fprintf(filPointer, "%s\n", "BMI er mellem 25 og 30.");
+        printf("\nWARNING: BMI is between 25 og 30.\n");
     }
-    else if(tilstand == -1)
+    else if(tilstand == 3)
     {
-        fprintf(filPointer, "%s\n", "BMI er over 30.");
+        printf("\nWARNING: BMI is over 30.\n");
     }
 }
 
@@ -102,12 +103,13 @@ int warning_BMI(double BMI)
         return 1;
 
     else if (BMI >= 25 && BMI <= 30)
-        return 0;
+        return 2;
 
     else if(BMI > 30)
-        return -1;
+        return 3;
+
     else
-        return 2;
+        return 0;
 }
 
 /*From filehandler.c*/
@@ -124,7 +126,7 @@ void add_person(personInfo *person)		/* Function for adding a person the the sys
 		 log[LOG_FILE_SIZE];
 
 	sprintf(fileName, "%s%d/%d ID.txt", FILE_PATH, person->id, person->id); /*Creates file name from ID of the person*/
-	sprintf(log, "%d, %s, %.10lld, %s, %s\n", person->id, person->department, person->cprNumber, person->name, person->allergy);/*Pulls log indformation from stuct*/
+	sprintf(log, "%d, %s, %lld, %s\n", person->id, person->department, person->cprNumber, person->name);/*Pulls log indformation from stuct*/
 	save_in_file(personFilePtr, log, fileName);
 }
 
@@ -150,16 +152,19 @@ void add_food_intake(int p_ID, nutrition intake[]) /* Adds a food intake to the 
 	{
 		if (i == 0)					/* Print the dish name,total nutrition, and a timestamp */
 		{
-			sprintf(log, "\n%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
+			sprintf(log, "%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
 			save_in_file(foodFilePtr, log, fileName);
 		}
 		else						/* Print the engredients of the dish */
 		{
       if (intake[i].kiloJoule != 0){
 			  sprintf(log, "\n                   %s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g. \n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
-			  save_in_file(foodFilePtr, log, fileName);}
+			  save_in_file(foodFilePtr, log, fileName);
+        }
 		}
 	}
+  sprintf(log, "\n\n");
+  save_in_file(foodFilePtr, log, fileName);
 }
 
 void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds a contition log to the log file. */
@@ -175,7 +180,7 @@ void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds
 
 	datestamp(timeStamp);
 	sprintf(fileName, "%s%d/%d condition.txt", FILE_PATH, person.id, person.id); /*Creates file name from ID of the person*/
-	sprintf(log, "%18s | %3lf | %3lf | %3.2lf | %4d | %4.2lf | %30s | %30s\n", timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness, conditionLog.allergy); /*Creates file name from ID of the person*/
+	sprintf(log, "%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |\n", timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness); /*Creates file name from ID of the person*/
 	save_in_file(condtionFilePtr, log, fileName);
 }
 
@@ -183,12 +188,10 @@ void save_in_file(FILE *filePtr, char string[], char fileName[]) /* Saves string
 {
 	if (filePtr != NULL)				/* appends to file if it exist */
 	{
-		printf("appended %s\n", fileName);
 		filePtr = fopen(fileName, "a");
 		fprintf(filePtr, string);
 	} else								/* If the file does not exist, a new one is made */
 	{
-		printf("made %s\n", fileName);
 		filePtr = fopen(fileName, "w");
 		fprintf(filePtr, string);
 	}
@@ -197,11 +200,7 @@ void save_in_file(FILE *filePtr, char string[], char fileName[]) /* Saves string
 
 void make_patient_folder(char *string)		/* Creates the main folder to store all patient subfolders */
 {
-	if (_mkdir(string) == 0)
-	{
-		printf("made folder: %s\n", string);
-	}
-	else printf("Folder already exists\n");
+  _mkdir(string);
 }
 
 void make_folder(personInfo person)			/* Makes patient subfolders */
@@ -212,10 +211,7 @@ void make_folder(personInfo person)			/* Makes patient subfolders */
 	itoa(person.id, idPath, 10);			/* Converts a number to a string (needed for the _mkdir because it needs a string) */
 	strcat(path, idPath);
 
-	if (_mkdir(path)==0)
-	{
-		printf("made folder: %s\n", path);
-	} else printf("Folder already exists\n");
+  _mkdir(path);
 }
 
 void update_index_file(personInfo *person)	/* Updates the index file that tracks all the patients */
@@ -227,7 +223,7 @@ void update_index_file(personInfo *person)	/* Updates the index file that tracks
 	sprintf(fileName, "%s%s", FILE_PATH, INDEX_FILE_NAME);
 	int index = find_index(indexFilePtr, fileName);
 	person->id = index;
-	sprintf(indexLog, "%d %s %s\n", index, person->name, person->illness);
+	sprintf(indexLog, "%d %s\n", index, person->name);
 
 	save_in_file(indexFilePtr, indexLog, fileName);
 }
@@ -239,11 +235,10 @@ int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest
 	{
 		int index = 0, c = 0;
 		char name[NAME_SIZE];
-		char illness[NAME_SIZE];
 
 		while (!feof(filePtr))
 		{
-			fscanf(filePtr, " %d %[A-z] %[A-z]\n", &index, name, illness); /* Scans index file for the heigest index assuming the heigst index is last */
+			fscanf(filePtr, " %d %[A-z]\n", &index, name); /* Scans index file for the heigest index assuming the heigst index is last */
 			printf("%d \n", index);
 		}
 		fclose(filePtr);
