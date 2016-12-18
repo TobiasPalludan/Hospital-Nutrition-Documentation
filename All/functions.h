@@ -10,7 +10,7 @@
 #define FILE_NAME_SIZE 25
 #define LOG_FILE_SIZE 200
 #define MAX_LOG_ENTRIES 10
-#define PRINT_DATA_SIZE 1000
+#define PRINT_DATA_SIZE 200
 
 #define FILE_PATH "patients/"
 #define INDEX_FILE_NAME "PatientIndex.txt"

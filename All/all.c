@@ -16,7 +16,7 @@
 #define FILE_NAME_SIZE 25
 #define LOG_FILE_SIZE 200
 #define MAX_LOG_ENTRIES 10
-#define PRINT_DATA_SIZE 1000
+#define PRINT_DATA_SIZE 200
 #define RESET_OPTION 4
 
 #define FILE_PATH "patients/"
@@ -27,14 +27,13 @@
 void p_main_menu(indexPos *indexArr, int indLen);
 void p_new_patient(indexPos *indexArr, int indLen);
 void p_existing_patient(indexPos *indexArr, int indLen);
-void p_patient_menu(indexPos *indexArr, int p_ID, int indLen);
-void p_update(indexPos *indexArr, int p_ID, int indLen);
-void p_weight(int p_ID);
-void p_intake(indexPos *indexArr, int p_ID, int indLen);
-void p_change(int p_ID);
-void p_print(int p_ID);
-int p_discharge(int p_ID);
-
+void p_patient_menu(indexPos *indexArr, int patientID, int indLen);
+void p_update(indexPos *indexArr, int patientID, int indLen);
+void p_weight(int patientID);
+void p_intake(indexPos *indexArr, int patientID, int indLen);
+void p_change(int patientID);
+void p_print(int patientID);
+int p_discharge(int patientID);
 
 
 int
@@ -60,8 +59,7 @@ main (void){
   return 0;
 }
 
-/* Main menu has 2 parameters, a indexPos pointer and an int indLen!!!!!
- * the function gives the user 4 choices in the userinterface*/
+/* Main menu lets you have 3 choices; create new patient, access existing patient and exit*/
 void p_main_menu(indexPos *indexArr, int indLen)
 {
 
@@ -71,27 +69,30 @@ void p_main_menu(indexPos *indexArr, int indLen)
 
   while(choice != 0)
   {
-      while (choice != 1 && choice != 2 && choice != 0) {
+    while (choice != 1 && choice != 2 && choice != 0)
+      {
         clear();
         printf("Main Menu\nWelcome,\n\n *Press 1 to create new patient\n *Press 2 to access patient menu\n\n *Press 0 to exit \n\n>");
         scanf("\n%d", &choice);
-  }
-
-      if (choice == 1)
-      {
-        p_new_patient(indexArr, indLen);
-        choice = RESET_OPTION;
       }
+    switch (choice)
+    {
+      case 1:
+      p_new_patient(indexArr, indLen);
+      choice = RESET_OPTION;
+      break;
 
-      else if (choice == 2)
-      {
-        p_existing_patient(indexArr, indLen);
-        choice = RESET_OPTION;
-      }
+      case 2:
+      p_existing_patient(indexArr, indLen);
+      choice = RESET_OPTION;
+      break;
     }
+  }
   return;
 }
 
+/*The function scans ands stores for a new patient and prints a warning if BMI is too low, it redirects to p_main_menu
+ *when it is done creating new patient*/
 void p_new_patient(indexPos *indexArr, int indLen)
 {
   clear();
@@ -127,55 +128,55 @@ void p_new_patient(indexPos *indexArr, int indLen)
   return;
 }
 
+/*Function acceses existing patient through ID and redirects to p_main_menu*/
 void p_existing_patient(indexPos *indexArr, int indLen)
 {
-  int p_ID;
+  int patientID;
   clear();
   printf("Main Menu/Patient Menu\n\n Enter patient ID\n>");
-  scanf("\n%d", &p_ID);
-  p_patient_menu(indexArr, p_ID, indLen);
+  scanf("\n%d", &patientID);
+  p_patient_menu(indexArr, patientID, indLen);
+
   return;
 }
 
-
-void p_patient_menu(indexPos *indexArr, int p_ID, int indLen)
+/*p_patient_menu is the menu for the patient, it lets you have 4 choices; edit patient information,
+ *read patient information, discharge patient and exit*/
+void p_patient_menu(indexPos *indexArr, int patientID, int indLen)
 {
   int choice;
   choice = RESET_OPTION;
   clear();
-  printf("Main Menu/Patient Menu\n Patient #%d\n\n You have 4 choices.\n *Press 1 to edit/add patient data\n *Press 2 to read patient date\n *Press 3 to discharge patient\n\n *Press 0 to go back to Main Menu\n\n>", p_ID);
+  printf("Main Menu/Patient Menu\n Patient #%d\n\n You have 4 choices.\n *Press 1 to edit/add patient data\n *Press 2 to read patient date\n *Press 3 to discharge patient\n\n *Press 0 to go back to Main Menu\n\n>", patientID);
 
 
   while(choice != 0)
   {
     while (choice != 1 && choice != 2 && choice != 3 && choice != 0) {
       clear();
-      printf("Main Menu/Patient Menu\n Patient #%d\n\n You have 4 choices.\n *Press 1 to edit/add patient data\n *Press 2 to read patient date\n *Press 3 to discharge patient\n\n *Press 0 to go back to Main Menu\n\n>", p_ID);
+      printf("Main Menu/Patient Menu\n Patient #%d\n\n You have 4 choices.\n *Press 1 to edit/add patient data\n *Press 2 to read patient date\n *Press 3 to discharge patient\n\n *Press 0 to go back to Main Menu\n\n>", patientID);
       scanf("\n%d", &choice);
   }
-
-    if (choice == 1)
+    switch (choice)
     {
-      p_update(indexArr, p_ID, indLen);
-      choice = RESET_OPTION;
-    }
-
-    else if (choice == 2)
-    {
-      p_print(p_ID);
-      choice = RESET_OPTION;
-    }
-
-    else if (choice == 3)
-    {
-      choice = p_discharge(p_ID);
+      case 1:
+        p_update(indexArr, patientID, indLen);
+        choice = RESET_OPTION;
+        break;
+      case 2:
+        p_print(patientID);
+        choice = RESET_OPTION;
+        break;
+      case 3:
+        choice = p_discharge(patientID);
+        break;
     }
   }
   return;
 }
 
-
-void p_update(indexPos *indexArr, int p_ID, int indLen){
+/*The function lets you have 3 choices; update weight, enter new intake, change patient information or go back to patient menu*/
+void p_update(indexPos *indexArr, int patientID, int indLen){
   int choice;
   choice = RESET_OPTION;
 
@@ -183,32 +184,31 @@ void p_update(indexPos *indexArr, int p_ID, int indLen){
     while (choice != 1 && choice != 2 && choice != 3 && choice != 0)
     {
       clear();
-      printf("Main Menu/Patient Menu/Update patient data\n Patient #%d\n\n You have 4 choices\n *Press 1 to enter new weight\n *Press 2 to enter new intake\n *Press 3 to change patient info\n\n *Press 0 to go back to Patient menu\n\n>", p_ID);
+      printf("Main Menu/Patient Menu/Update patient data\n Patient #%d\n\n You have 4 choices\n *Press 1 to enter new weight\n *Press 2 to enter new intake\n *Press 3 to change patient info\n\n *Press 0 to go back to Patient menu\n\n>", patientID);
       scanf("\n%d", &choice);
     }
-
-      if (choice == 1)
+      switch (choice)
       {
-        p_weight(p_ID);
-        choice = RESET_OPTION;
-      }
-
-      else if (choice == 2)
-      {
-        p_intake(indexArr, p_ID, indLen);
-        choice = RESET_OPTION;
-      }
-
-      else if (choice == 3)
-      {
-        p_change(p_ID);
-        choice = RESET_OPTION;
+        case 1:
+          p_weight(patientID);
+          choice = RESET_OPTION;
+          break;
+        case 2:
+          p_intake(indexArr, patientID, indLen);
+          choice = RESET_OPTION;
+          break;
+        case 3:
+          p_change(patientID);
+          choice = RESET_OPTION;
+          break;
       }
   }
   return;
 }
 
-void p_weight(int p_ID)
+/*The function scans for new weight and updates patientLog for weight BMI and BMR and adds a timestamp for
+ *the change in the stored file contiont.txt*/
+void p_weight(int patientID)
 {
   /*Scan new weight*/
   int choice, ID;
@@ -217,8 +217,8 @@ void p_weight(int p_ID)
   conditionHistory personLog;
   FILE *fileptr, *fileptr_ID;
   char place[30], place_ID[30], patient_data[100], useless[30], patient_ID[100], uselesstime[100], date[20];
-  sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
-  sprintf(place_ID, "%s%d/%d ID.txt", FILE_PATH, p_ID, p_ID);
+  sprintf(place, "%s%d/%d condition.txt", FILE_PATH, patientID, patientID);
+  sprintf(place_ID, "%s%d/%d ID.txt", FILE_PATH, patientID, patientID);
 
   fileptr = fopen(place, "a+");
   fileptr_ID = fopen(place_ID, "r");
@@ -233,7 +233,8 @@ void p_weight(int p_ID)
   sscanf(patient_ID, " %d, %[^,], %lld, %[^\n]", &ID, useless, &cprNumber, useless);
 
 
-  sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s", uselesstime, &personLog.weight, &personLog.height, &personLog.bmi, &personLog.bmr, &personLog.temperature, personLog.illness);
+  sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s", uselesstime, &personLog.weight, &personLog.height,
+        &personLog.bmi, &personLog.bmr, &personLog.temperature, personLog.illness);
 
   /*Måske lave de næste 23 linjer til en funktion*/
   choice = RESET_OPTION;
@@ -242,7 +243,7 @@ void p_weight(int p_ID)
     while (choice != 1 && choice != 0)
     {
       clear();
-      printf("Main Menu/Patient Menu/Update patient data/Weight Update\n Patient #%d\n\n *enter the new weight\n *Press 0 to go back to Patient_menu\n\n>", p_ID);
+      printf("Main Menu/Patient Menu/Update patient data/Weight Update\n Patient #%d\n\n *enter the new weight\n *Press 0 to go back to Patient_menu\n\n>", patientID);
       scanf("\n%lf", &weight);
 
       if (weight == 0)
@@ -254,7 +255,8 @@ void p_weight(int p_ID)
       personLog.bmi = BMI(personLog.height, personLog.weight);
       personLog.bmr = BMR(personLog.height, personLog.weight, cprNumber);
 
-      fprintf(fileptr, "\n%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |", date, personLog.weight, personLog.height, personLog.bmi, personLog.bmr, personLog.temperature, personLog.illness);
+      fprintf(fileptr, "\n%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |", date, personLog.weight,
+             personLog.height, personLog.bmi, personLog.bmr, personLog.temperature, personLog.illness);
       fclose(fileptr);
 
       print_warning(personLog.bmi);
@@ -271,7 +273,8 @@ void p_weight(int p_ID)
 }
 
 
-void p_intake(indexPos *indexArr, int p_ID, int indLen)
+/*The intake is scanned and found through ingredient_prompt, and added to the file IntakeLog and */
+void p_intake(indexPos *indexArr, int patientID, int indLen)
 {
   /*Scan new intake*/
   int choice;
@@ -280,7 +283,7 @@ void p_intake(indexPos *indexArr, int p_ID, int indLen)
   FILE *dtb;
 
   clear();
-  printf("Main Menu/Patient Menu/Update patient data/New Intake\n Patient #%d\n\n *Press 1 to insert new intake  \n *Press 0 to go back to Patient_menu\n\n>",  p_ID);
+  printf("Main Menu/Patient Menu/Update patient data/New Intake\n Patient #%d\n\n *Press 1 to insert new intake  \n *Press 0 to go back to Patient_menu\n\n>",  patientID);
   scanf("\n%d", &choice);
 
   if (choice != 0)
@@ -314,14 +317,15 @@ void p_intake(indexPos *indexArr, int p_ID, int indLen)
   /*
    * Param indLen is the length of the index array. Returned by the function as a parameter.
    * Param dtb is the pointer to the database file.*/
-  add_food_intake(p_ID, meal);
+  add_food_intake(patientID, meal);
   free(meal);
 
   return;
 }
 
-
-void p_change(int p_ID)
+/*The function updates the information found in condition.txt by adding a new line based on the scanned input and the date
+ *the newest line in condition.txt will be the current updated information*/
+void p_change(int patientID)
 {
   /*Change patient data/info*/
   int ID, choice;
@@ -330,9 +334,10 @@ void p_change(int p_ID)
   conditionHistory personLog;
   char place[30], place_ID[30], patient_data[100], useless[30], patient_ID[100], uselesstime[100], date[20];
 
-  sprintf(place, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
-  sprintf(place_ID, "%s%d/%d ID.txt", FILE_PATH, p_ID, p_ID);
+  sprintf(place, "%s%d/%d condition.txt", FILE_PATH, patientID, patientID);
+  sprintf(place_ID, "%s%d/%d ID.txt", FILE_PATH, patientID, patientID);
 
+  /* Gets the current information, from condition.txt, and the patient cprNumber from ID.txt*/
   fileptr = fopen(place, "a+");
   fileptr_ID = fopen(place_ID, "r");
   while(fgets(patient_data, PRINT_DATA_SIZE, fileptr) != NULL)
@@ -343,33 +348,34 @@ void p_change(int p_ID)
 
   fgets(patient_ID, PRINT_DATA_SIZE, fileptr_ID);
 
-  sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s", uselesstime, &personLog.weight, &personLog.height, &personLog.bmi, &personLog.bmr, &personLog.temperature, personLog.illness);
+  sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s", uselesstime, &personLog.weight, &personLog.height,
+        &personLog.bmi, &personLog.bmr, &personLog.temperature, personLog.illness);
+  /*We are interested in the patient cprNumber, for calculating the BMR */
   sscanf(patient_ID, " %d, %[^,], %lld, %[^\n]", &ID, useless, &cprNumber, useless);
 
   clear();
 
-  printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n\n*Press 1 to insert updated patient info\n*Press 0 to go back to Patient_menu\n\n>", p_ID);
+  printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n\n*Press 1 to insert updated patient info\n*Press 0 to go back to Patient_menu\n\n>", patientID);
   scanf("%d", &choice);
   if (choice != 0){
     clear();
-    printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n", p_ID);
+    printf("Main Menu/Patient Menu/Update patient data/Change patient data/info \n Patient #%d\n", patientID);
     printf("Enter updated info in the order: weight, height, temperature, illness og allergy\n\n"
     "Persondata foer aendring:\n\n| Weight | Height | Temp |   Illness |\n"
     "| %6g | %6g | %4g | %9s |\n\nEnter the new information:\n>",  personLog.weight, personLog.height, personLog.temperature, personLog.illness);
 
+    /*Scanning for new info*/
     scanf("\n%lf %lf %lf %s",&personLog.weight, &personLog.height, &personLog.temperature, personLog.illness);
 
     datestamp(date);
-    /*Note at der er forskel på personLog og person
-    * Det skal højst sandsynligt ændres!
-    * ELler skal det?
-    *
-    */
+
     printf("|%s\n", "Persondata efter aendring:");
     printf("\n| %g | %g | %g | %s |", personLog.weight, personLog.height, personLog.temperature, personLog.illness);
+    /*Updates BMI and BMR*/
     personLog.bmi = BMI(personLog.height, personLog.weight);
     personLog.bmr = BMR(personLog.height, personLog.weight, cprNumber);
-    fprintf(fileptr, "\n%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |", date, personLog.weight, personLog.height, personLog.bmi, personLog.bmr, personLog.temperature, personLog.illness);
+    fprintf(fileptr, "\n%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |", date, personLog.weight, personLog.height,
+           personLog.bmi, personLog.bmr, personLog.temperature, personLog.illness);
     fclose(fileptr);
 
     print_warning(personLog.bmi);
@@ -383,8 +389,9 @@ void p_change(int p_ID)
   return;
 }
 
-
-void p_print(int p_ID)
+/*The function simply retieves the line of information from ID.txt and the newest line from condition.txt
+and prints it*/
+void p_print(int patientID)
 {
   /*Print patient data*/
   FILE *fileptr, *fileptr_log;
@@ -392,13 +399,13 @@ void p_print(int p_ID)
   char place[30],  patient_data[200], place_log[30], patient_data_log[200];
   choice = RESET_OPTION;
 
-  sprintf(place, "%s%d/%d ID.txt", FILE_PATH, p_ID, p_ID);
-  sprintf(place_log, "%s%d/%d condition.txt", FILE_PATH, p_ID, p_ID);
+  sprintf(place, "%s%d/%d ID.txt", FILE_PATH, patientID, patientID);
+  sprintf(place_log, "%s%d/%d condition.txt", FILE_PATH, patientID, patientID);
 
   fileptr = fopen(place, "r");
   fileptr_log = fopen(place_log, "r");
 
-
+  /*Scans the patient info from file into string*/
   fgets(patient_data, PRINT_DATA_SIZE, fileptr);
   while(fgets(patient_data_log, PRINT_DATA_SIZE, fileptr_log)!=NULL)
   {
@@ -410,8 +417,8 @@ void p_print(int p_ID)
   fclose(fileptr_log);
 
   clear();
-  printf("Main Menu/Patient Menu/Print patient info\n Patient #%d\n\n",  p_ID);
-  printf("%s\n", patient_data);
+  printf("Main Menu/Patient Menu/Print patient info\n Patient #%d\n\n",  patientID);
+  printf(" ID# %s\n", patient_data);
 
   printf("|       Date        | Weight | Height |  BMI |   BMR | Temp |   Illness |\n|%s\n\n", patient_data_log);
 
@@ -424,12 +431,14 @@ void p_print(int p_ID)
   return;
 }
 
-int p_discharge(int p_ID)
+/*This function does not discharge patients, but is only the prompt function/userinterface that allows it.
+ *If the user choses the to discharge a patien, the user then returns to main menu*/
+int p_discharge(int patientID)
 {
   int choice;
   choice = RESET_OPTION;
   clear();
-  printf("Main Menu/Patient Menu/Discharging a patient\n Patient #%d\n\n *Press 1 to discharge patient \n\n *Press 0 to go back to Patient_menu\n\n>", p_ID);
+  printf("Main Menu/Patient Menu/Discharging a patient\n Patient #%d\n\n *Press 1 to discharge patient \n\n *Press 0 to go back to Patient_menu\n\n>", patientID);
   scanf("\n%d", &choice);
 
   while (choice != 1 &&  choice != 0)
@@ -440,14 +449,14 @@ int p_discharge(int p_ID)
 
   if (choice == 1)
   {
-    /*Udskrivning af patient (Discharge, ikke print)*/
+    /*Discharging patient*/
     clear();
-    printf("Discharging patient #%d ....\n Discharge complete, Press 0 to return to main menu\n>", p_ID);
+    printf("Discharging patient #%d ....\n Discharge complete, Press 0 to return to main menu\n>", patientID);
     scanf("\n%d", &choice);
 
     while (choice != 0)
     {
-      printf("*Press 0 to return to main menu\n>", p_ID);
+      printf("*Press 0 to return to main menu\n>", patientID);
       scanf("\n%d", &choice);
     }
     return 0;
@@ -458,5 +467,3 @@ int p_discharge(int p_ID)
     return RESET_OPTION;
   }
 }
-
-/////////////////////////////

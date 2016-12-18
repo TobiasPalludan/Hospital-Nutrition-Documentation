@@ -17,7 +17,7 @@ double BMI(double height, double weight){
 
 /* We calculate BMR from the standard equation and in proportion to gender*/
 
-/* Input: height, weight and CPRnumber of a given person 
+/* Input: height, weight and CPRnumber of a given person
    Output: Standard BMR of the given person depending on gender*/
 double BMR(double height, double weight, long long int cpr){
   const double c_1 = 665.0955, c_2 = 9.5634, c_3 = 1.8496, c_4 = 4.6756, c_5 = 66.5, c_6 = 13.7516, c_7 = 5.0033, c_8 = 6.755;
@@ -44,11 +44,11 @@ double BMR(double height, double weight, long long int cpr){
    Output: Age of the given person*/
 int get_age(long long int cpr){
   int age, dateofbirth, year, month, day, temp, n_7;
-  
+
   /*time_t is a type from time.h*/
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
-  
+
   /*Temp is a temporary variables which is used to calculate the other variables value*/
   dateofbirth = cpr / 10000;
   n_7 = (cpr / 1000) % 10;
@@ -58,12 +58,12 @@ int get_age(long long int cpr){
   temp = temp/ 100;
   day = temp % 100;
 
-/*If the if statement is true, the person is born in 2000 or above, but the year(birthyear) wont be above 2000 but between 1900-1999. 
+/*If the if statement is true, the person is born in 2000 or above, but the year(birthyear) wont be above 2000 but between 1900-1999.
   Therefore we need to add 100 to year(birthyear), so the year(birthyear) will be above 2000 and thereby calculate the right age*/
   if ((n_7 == 4 || n_7 == 9 && year < 1937) )
     year = year + 100;
-  
-  /*If the if statement is true, the person is born in 2000 or above, but the year(birthyear) wont be above 2000 but between 1900-1999. 
+
+  /*If the if statement is true, the person is born in 2000 or above, but the year(birthyear) wont be above 2000 but between 1900-1999.
   Therefore we need to add 100 to year(birthyear), so the year(birthyear) will be above 2000 and thereby calculate the right age*/
   else if (n_7 > 4 && n_7 < 1958 )
     year = year + 100;
@@ -85,13 +85,13 @@ int get_age(long long int cpr){
 
 /* We get the current day by using the library time.h */
 
-/*Input: Empty array which shall contain the date and time 
+/*Input: Empty array which shall contain the date and time
   Output: No return, but the empty array will be assigned to values
           which represents the current date and time*/
 void datestamp(char output[]){
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
-  
+
   /*Printing values from struct tm to the array we get through function parameters*/
   sprintf(output, "%.2d-%.2d-%.4d %.2d:%.2d", tm.tm_mday, tm.tm_mon + 1,
                 tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
@@ -104,7 +104,7 @@ void print_warning(double BMI)
 {
   int tilstand;
   tilstand = warning_BMI(BMI);
-    
+
     /*The warning is getting printed on standard output */
     if(tilstand == 1)
     {
@@ -120,7 +120,7 @@ void print_warning(double BMI)
     }
 }
 
-/* Returns a value depending on BMI*/ 
+/* Returns a value depending on BMI*/
 
 /*Input: BMI for the given person, calculated by the function "BMI"
   Output: A value depending on the value of BMI*/
@@ -149,8 +149,8 @@ int warning_BMI(double BMI)
 
     Input: pointer to a variable of the type personInfo.
     Output: No return*/
-void add_person(personInfo *person)		
-{										
+void add_person(personInfo *person)
+{
 	char fileName[FILE_NAME_SIZE],
 		 log[LOG_FILE_SIZE];
 
@@ -161,17 +161,17 @@ void add_person(personInfo *person)
 	make_patient_folder(FILE_PATH);
 
 	/*person is a variable from functionparameter*/
-	update_index_file(person); 
+	update_index_file(person);
 
 	/*person is a variable from functionparameter*/
-	make_folder(*person); 
+	make_folder(*person);
 
 	/*Creates file name from ID of the person*/
 	sprintf(fileName, "%s%d/%d ID.txt", FILE_PATH, person->id, person->id);
-	
+
 	/*Pulls log information from stuct*/
-	sprintf(log, "%d, %s, %lld, %s\n", person->id, person->department, person->cprNumber, person->name);
-	
+	sprintf(log, "%d, %s, %.10lld, %s\n", person->id, person->department, person->cprNumber, person->name);
+
   /* Saves string in a file, or makes the file if its not already there.*/
 	save_in_file(personFilePtr, log, fileName);
 }
@@ -187,32 +187,34 @@ void add_food_intake(int p_ID, nutrition intake[])
   char fileName[FILE_NAME_SIZE],
 		   log[LOG_FILE_SIZE],
 		   timeStamp[TIME_STAMP_SIZE];
-	
+
   /*Used to acces file or create it via save_in_file*/
 	FILE *foodFilePtr;
-  
+
   /*Function which calculate the actual date and time*/
 	datestamp(timeStamp);
 
 	/*Creates file name from ID of the person*/
-	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, p_ID, p_ID); 
+	sprintf(fileName, "%s%d/%d IntakeLog.txt", FILE_PATH, p_ID, p_ID);
 	printf("%s\n", fileName);
-  
+
   /*Prints information for each Ingredient that the user has entered aswell as dishname and what i contains*/
 	for (int i = 0; i < intake[0].noIngredients +1; i++)
 	{
 		if (i == 0)	/* Prints the dish name,total nutrition, and a timestamp */
 		{
-			sprintf(log, "%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp, intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
-			
+			sprintf(log, "%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp, intake[i].ingredient,
+             intake[i].kiloJoule, intake[i].protein, intake[i].fat);
+
       /*Saves the string in the array called log in the file which foodfilePtr is pointing at. Or makes the file if its not already there.*/
 			save_in_file(foodFilePtr, log, fileName);
 		}
 		else /* Prints the ingredients of the dish */
 		{
       if (intake[i].kiloJoule != 0){
-			  sprintf(log, "\n                   %s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g. \n", intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
-			  
+			  sprintf(log, "\n                   %s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g. \n", intake[i].ingredient,
+               intake[i].kiloJoule, intake[i].protein, intake[i].fat);
+
         /*Saves the string in the array called log in the file which foodfilePtr is pointing at.*/
 			  save_in_file(foodFilePtr, log, fileName);
         }
@@ -227,7 +229,7 @@ void add_food_intake(int p_ID, nutrition intake[])
 /* Input: a variable person with type personInfo which contains the basic
    information about the patient. A variable conditionLog with type conditionsHistory
    which contains information about the patients health.
-   Output: No return, but prints a string containen information about the 
+   Output: No return, but prints a string containen information about the
    patient to the file given patientfile called condition.txt */
 void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds a contition log to the log file. */
 {
@@ -237,7 +239,7 @@ void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds
 	char fileName[FILE_NAME_SIZE],
 		 log[LOG_FILE_SIZE],
 		 timeStamp[TIME_STAMP_SIZE];
-  
+
   /*Assigns the variable conditionLog's BMI and BMR to the return value of the BMI and BMR function*/
   conditionLog.bmi = BMI(conditionLog.height, conditionLog.weight);
   conditionLog.bmr = BMR(conditionLog.height, conditionLog.weight, person.cprNumber);
@@ -246,21 +248,22 @@ void add_condition_log(personInfo person, conditionHistory conditionLog) /* adds
 	datestamp(timeStamp);
 
 	/*Creates file name from ID of the person, so file name is: ID condition.txt*/
-	sprintf(fileName, "%s%d/%d condition.txt", FILE_PATH, person.id, person.id); 
-	
+	sprintf(fileName, "%s%d/%d condition.txt", FILE_PATH, person.id, person.id);
+
   /*Assigning values to the array called log, which then contain the information which should be printed into the file, which happens via the function save_in_file*/
-	sprintf(log, "%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |\n", timeStamp, conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness); 
-	
+	sprintf(log, "%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |\n", timeStamp, conditionLog.weight, conditionLog.height,
+         conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness);
+
   /*Saves the string in the array called log in the file which condtionFilePtr i pointing at.*/
 	save_in_file(condtionFilePtr, log, fileName);
 }
 
 /* Saves string in a file, or makes the file if its not already there.*/
 /* Input: A filepointer, string containing the information which should be
-   saved in the file, and last a string containing path and name of the file 
+   saved in the file, and last a string containing path and name of the file
    the information should be saved in
    Output: No return, but saves the information given as input in a file*/
-void save_in_file(FILE *filePtr, char string[], char fileName[]) 
+void save_in_file(FILE *filePtr, char string[], char fileName[])
 {
 	if (filePtr != NULL) /* appends to file if it exist */
 	{
@@ -282,10 +285,10 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 	fclose(filePtr);
 }
 
-/* Creates the main folder to store all patient subfolders at the given location.  
+/* Creates the main folder to store all patient subfolders at the given location.
    Input: A string containing the path where the file should be created
    Output: No return.*/
-void make_patient_folder(char *string)		
+void make_patient_folder(char *string)
 {
 	/*Makes folder at the given location, which is given by the function parameter*/
   _mkdir(string);
@@ -298,13 +301,13 @@ void make_folder(personInfo person)
 {
 	char path[FILE_NAME_SIZE] = { FILE_PATH },
 		 idPath[FILE_NAME_SIZE];
-  
-  /* Converts a number to a string (needed for the _mkdir because it needs a string) */
-	itoa(person.id, idPath, 10);	
 
-	/*Append idPath to path, makes a string with path and idPath*/	
+  /* Converts a number to a string (needed for the _mkdir because it needs a string) */
+	itoa(person.id, idPath, 10);
+
+	/*Append idPath to path, makes a string with path and idPath*/
 	strcat(path, idPath);
-  
+
   /*Makes folder with location according to the string that path contains*/
   _mkdir(path);
 }
@@ -314,25 +317,25 @@ void make_folder(personInfo person)
 /* Input: a pointer to the variable person with the type personInfo
    Output: No return, but prints a string to the indexfile via the the function save_in_file*/
 void update_index_file(personInfo *person)
-{ 
+{
 	/*Used to acces file or create it via save_in_file*/
 	FILE *indexFilePtr;
 
 	char indexLog[NAME_SIZE],
 		 fileName[NAME_SIZE];
-  
+
   /*Makes string named "fileName" which contains the value of the global
    variables FILE_PATH and INDEX_FILE_NAME which comes from functions.h*/
 	sprintf(fileName, "%s%s", FILE_PATH, INDEX_FILE_NAME);
-  
+
   /*find_index returns what index/ID the patient should have*/
 	int index = find_index(indexFilePtr, fileName);
-	
+
 	person->id = index;
-	
+
 	/*Makes the string which will be printed into the indexfile via save_in_file*/
 	sprintf(indexLog, "%d %s\n", index, person->name);
-  
+
   /*Prints the string which indexLog contains into the file which name and location */
   save_in_file(indexFilePtr, indexLog, fileName);
 }
@@ -348,7 +351,7 @@ int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest
 	/*Opens the indexfile in readmode*/
 	filePtr = fopen(fileName, "r");
 
-	/*If the file is empty then is filePtr == NULL otherwise is filePtr != NULL*/	
+	/*If the file is empty then is filePtr == NULL otherwise is filePtr != NULL*/
 	/*If the if statement is true the file isn't empty and the content is being read*/
 	if (filePtr != NULL)
 	{
@@ -359,13 +362,13 @@ int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest
 		{
 			/*Scans index file for the heigest index assuming the heigst index is last */
 			/*Scans all lines and finds the last index/highest index in the file and returns that value + 1*/
-			fscanf(filePtr, " %d %[A-z]\n", &index, name); 
+			fscanf(filePtr, " %d %[A-z]\n", &index, name);
 			printf("%d \n", index);
 		}
 		fclose(filePtr);
 		return index + 1;
 	}
-	/*If the file is empty it means that there are no patients registered, 
+	/*If the file is empty it means that there are no patients registered,
 	therefore it returns 1 which is the highest index at the current time*/
 	else {
 		fclose(filePtr);
