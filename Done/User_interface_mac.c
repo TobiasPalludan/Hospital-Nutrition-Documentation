@@ -3,7 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include <direct.h>
-#include "user_interface.h"
+#include "user_interface_mac.h"
 
 int main (void){
   int indLen = 0;

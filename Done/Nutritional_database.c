@@ -4,8 +4,8 @@
 #include <ctype.h>
 #include "nutritional_database.h"
 
-/*Function will read line by line in the database 
-  and store the information on the given line in [i]'d cell in index array.*/ 
+/*Function will read line by line in the database
+  and store the information on the given line in [i]'d cell in index array.*/
 
 /*Input:Param indLen is the length of the index array. Returned by the function as a parameter.
         Param dtb is the pointer to the database file.
@@ -47,20 +47,18 @@ indexPos* index_database(int *indLen, FILE *dtb)
 		*indLen += 1;
 	} while (fgetsPtr != NULL);
 
-	printf("Index loaded with %d elements.\n", *indLen);
-
 	return indexArr;
 }
 /*Function takes input from user about the dish and its ingredients. By calling find_database_value
-  we search for the ingredients in the database and thereby finds the ingredients properties. Next 
-  returns the information about the ingredients through pointers and stores the returned information 
+  we search for the ingredients in the database and thereby finds the ingredients properties. Next
+  returns the information about the ingredients through pointers and stores the returned information
   from find_database_value in an array of structs called dish in ingredient_prompt which will be returned
   as pointer in the function ingredient_prompt*/
- 
+
  /* Input: Param indlen is the length of the index array. This value is from function index_database.
            Param indexArr is the loaded array, from the index_database function.
            Param dtb is the pointer to the database file.
- 
+
   Output: Return value is a struct with all necesarry information of the dish that was created.*/
 nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb)
 {
@@ -180,8 +178,8 @@ void find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_IN
 					exit(EXIT_FAILURE);
 
 				sscanf(tempLine, " %[^0-9] %d %lf %lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein, &dish[i].fat);
-				
-				/*Stores the amount of protein, fat and kiloJoule aswell as weight for each ingredient in dish[i]. 
+
+				/*Stores the amount of protein, fat and kiloJoule aswell as weight for each ingredient in dish[i].
 				  It also sums it all together and stores the values in dish[0]. Which then desribes how much
 				  protein, fat and kiloJoule that is in the meal. */
 
