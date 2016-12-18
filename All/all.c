@@ -205,7 +205,7 @@ void p_weight(int patientID)
   sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s", uselesstime, &personLog.weight, &personLog.height,
         &personLog.bmi, &personLog.bmr, &personLog.temperature, personLog.illness);
 
-  /*Måske lave de næste 23 linjer til en funktion*/
+
   choice = RESET_OPTION;
   while (choice != 0)
   {
@@ -220,6 +220,7 @@ void p_weight(int patientID)
 
       datestamp(date);
 
+      /*Update BMI and BMR after the new weight*/
       personLog.weight = weight;
       personLog.bmi = BMI(personLog.height, personLog.weight);
       personLog.bmr = BMR(personLog.height, personLog.weight, cprNumber);
