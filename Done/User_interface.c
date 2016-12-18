@@ -60,12 +60,11 @@ void p_main_menu(indexPos *indexArr, int indLen)
 }
 
 /*The function scans ands stores for a new patient and prints a warning if BMI is too low, it redirects to p_main_menu
- *when it is done creating new patient*/
+  when it is done creating new patient*/
 void p_new_patient(indexPos *indexArr, int indLen)
 {
   clear();
-  /*Promt for input til ny patient*/
-  /*Hardcoded*/
+  /*Promt for input to new patient*/
   int choice;
   personInfo person;
 	conditionHistory personLog;
@@ -109,7 +108,7 @@ void p_existing_patient(indexPos *indexArr, int indLen)
 }
 
 /*p_patient_menu is the menu for the patient, it lets you have 4 choices; edit patient information,
- *read patient information, discharge patient and exit*/
+  read patient information, discharge patient and exit*/
 void p_patient_menu(indexPos *indexArr, int patientID, int indLen)
 {
   int choice;
@@ -175,7 +174,7 @@ void p_update(indexPos *indexArr, int patientID, int indLen){
 }
 
 /*The function scans for new weight and updates patientLog for weight BMI and BMR and adds a timestamp for
- *the change in the stored file contiont.txt*/
+  the change in the stored file contiont.txt*/
 void p_weight(int patientID)
 {
   /*Scan new weight*/
@@ -283,9 +282,8 @@ void p_intake(indexPos *indexArr, int patientID, int indLen)
     }
   }
 
-  /*
-   * Param indLen is the length of the index array. Returned by the function as a parameter.
-   * Param dtb is the pointer to the database file.*/
+  /* Param indLen is the length of the index array. Returned by the function as a parameter.
+     Param dtb is the pointer to the database file.*/
   add_food_intake(patientID, meal);
   free(meal);
 
@@ -293,7 +291,7 @@ void p_intake(indexPos *indexArr, int patientID, int indLen)
 }
 
 /*The function updates the information found in condition.txt by adding a new line based on the scanned input and the date
- *the newest line in condition.txt will be the current updated information*/
+  the newest line in condition.txt will be the current updated information*/
 void p_change(int patientID)
 {
   /*Change patient data/info*/
@@ -319,6 +317,7 @@ void p_change(int patientID)
 
   sscanf(patient_data, " %[^|] | %lf | %lf | %lf | %d | %lf | %s", uselesstime, &personLog.weight, &personLog.height,
         &personLog.bmi, &personLog.bmr, &personLog.temperature, personLog.illness);
+  
   /*We are interested in the patient cprNumber, for calculating the BMR */
   sscanf(patient_ID, " %d, %[^,], %lld, %[^\n]", &ID, useless, &cprNumber, useless);
 
@@ -340,6 +339,7 @@ void p_change(int patientID)
 
     printf("|%s\n", "Persondata efter aendring:");
     printf("\n| %g | %g | %g | %s |", personLog.weight, personLog.height, personLog.temperature, personLog.illness);
+    
     /*Updates BMI and BMR*/
     personLog.bmi = BMI(personLog.height, personLog.weight);
     personLog.bmr = BMR(personLog.height, personLog.weight, cprNumber);
@@ -401,7 +401,7 @@ void p_print(int patientID)
 }
 
 /*This function does not discharge patients, but is only the prompt function/userinterface that allows it.
- *If the user choses the to discharge a patien, the user then returns to main menu*/
+  If the user choses the to discharge a patien, the user then returns to main menu*/
 int p_discharge(int patientID)
 {
   int choice;

@@ -39,7 +39,6 @@ void add_person(personInfo *person)
    containing information about the patients intake
    Output: No return, but it prints out a string containing information
    about the intake to the patients file called Intakelog.txt*/
-
 void add_food_intake(int p_ID, nutrition intake[])
 {
   char fileName[FILE_NAME_SIZE],

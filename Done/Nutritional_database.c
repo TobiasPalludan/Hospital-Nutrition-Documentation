@@ -4,19 +4,18 @@
 #include <ctype.h>
 #include "nutritional_database.h"
 
-/*
- * Param indLen is the length of the index array. Returned by the function as a parameter.
- * Param dtb is the pointer to the database file.
+/*Function will read line by line in the database 
+  and store the information on the given line in [i]'d cell in index array.*/ 
 
- * Return value is the index array containing name of the ingredient and it's position in the
- * database.
- */
+/*Input:Param indLen is the length of the index array. Returned by the function as a parameter.
+        Param dtb is the pointer to the database file.
+
+  Output:Return value is the index array containing name of the ingredient and it's position in the
+         database. */
 indexPos* index_database(int *indLen, FILE *dtb)
 {
-	/*
-	 * Only to be called once per runtime. Will load the index file,
-	 * and return a pointer through parameter.
-	 */
+	/*Only to be called once per runtime. Will load the index file,
+	  and return a pointer through parameter.	 */
 	indexPos *indexArr = malloc(DATABASE_DEPTH * sizeof(indexPos));
 	char tempString[MAX_LINE_LEN];
 	char *fgetsPtr;
@@ -52,14 +51,17 @@ indexPos* index_database(int *indLen, FILE *dtb)
 
 	return indexArr;
 }
-
-/*
- * Param indlen is the length of the index array. This value is from function index_database.
- * Param indexArr is the loaded array, from the index_database function.
- * Param dtb is the pointer to the database file.
- *
- * Return value is a struct with all necesarry information of the dish that was created.
- */
+/*Function takes input from user about the dish and its ingredients. By calling find_database_value
+  we search for the ingredients in the database and thereby finds the ingredients properties. Next 
+  returns the information about the ingredients through pointers and stores the returned information 
+  from find_database_value in an array of structs called dish in ingredient_prompt which will be returned
+  as pointer in the function ingredient_prompt*/
+ 
+ /* Input: Param indlen is the length of the index array. This value is from function index_database.
+           Param indexArr is the loaded array, from the index_database function.
+           Param dtb is the pointer to the database file.
+ 
+  Output: Return value is a struct with all necesarry information of the dish that was created.*/
 nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb)
 {
 	int i = 0;
@@ -82,10 +84,8 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
     puts("\nScan your ingredients and amount in grams. (Type 'Exit' or 'e' to stop):");
     puts("Example format: \"food 123\"");
 
-	/*
-	 *  Scan the ingredients you are using.
-	 *  Does not matter if you are using uppercase or lowercase
-	 */
+	/* Scan the ingredients you are using.
+	   Does not matter if you are using uppercase or lowercase*/
     do
     {
 
@@ -101,11 +101,9 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
         i++;
     } while (i < MAX_INGREDIENTS);
 
-	/*
-	 * These forloops converts the tempString and ingredient names in the index
-	 * to lowercase. That is why it does not matter if you are using uppercase
-	 * or lowercase in the scanf above.
-	 */
+	/* These forloops converts the tempString and ingredient names in the index
+	   to lowercase. That is why it does not matter if you are using uppercase
+	   or lowercase in the scanf above. */
 
 	for(i = 0; i < indLen; i++)
 	{
@@ -119,6 +117,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 
 	return dish;
 }
+
 /*Searches the database for the ingredients entered by the user in ingredient_prompt
  and assigns new value about the ingredients to the values stored in dish by the help of pointers*/
 
@@ -139,9 +138,7 @@ void find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_IN
 		int noHits = 0;
 		for (j = 0; j < indLen; j++)
 		{
-			/*
-			 * Searches for all instances of the ingredient in the search array.
-			 */
+			/*Searches for all instances of the ingredient in the search array. */
 			if (strstr(indexArr[j].ingredientName, foodArr[i].ingredientName) != 0)
 			{
 				strcpy(searchArr[noHits].ingredientName, indexArr[j].ingredientName);
@@ -183,6 +180,11 @@ void find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_IN
 					exit(EXIT_FAILURE);
 
 				sscanf(tempLine, " %[^0-9] %d %lf %lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein, &dish[i].fat);
+				
+				/*Stores the amount of protein, fat and kiloJoule aswell as weight for each ingredient in dish[i]. 
+				  It also sums it all together and stores the values in dish[0]. Which then desribes how much
+				  protein, fat and kiloJoule that is in the meal. */
+
 				dish[i].weight = weight[i];
 
 				dish[i].kiloJoule  = (dish[i].weight / 100) * dish[i].kiloJoule;
