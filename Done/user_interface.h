@@ -1,3 +1,5 @@
+/*Contains every prototype, definition and struct required by the program*/
+#define MAX_CHARS 25
 #define DEPARTMENT_SIZE 15
 #define NAME_SIZE 30
 #define ALLERGY_SIZE 50
