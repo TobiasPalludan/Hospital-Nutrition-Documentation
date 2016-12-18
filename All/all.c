@@ -5,37 +5,6 @@
 #include <direct.h>
 #include "functions.h"
 
-#define DEPARTMENT_SIZE 15
-#define NAME_SIZE 30
-#define ALLERGY_SIZE 50
-#define PREFERENCES_SIZE 100
-#define ILLNESS_SIZE 100
-#define TIME_STAMP_SIZE 18
-#define DISH_NAME_SIZE 20
-#define INGREDIENTS_SIZE 20
-#define FILE_NAME_SIZE 25
-#define LOG_FILE_SIZE 200
-#define MAX_LOG_ENTRIES 10
-#define PRINT_DATA_SIZE 200
-#define RESET_OPTION 4
-
-#define FILE_PATH "patients/"
-#define INDEX_FILE_NAME "PatientIndex.txt"
-#define clear() system("cls")
-
-/* Userinterface prototypes*/
-void p_main_menu(indexPos *indexArr, int indLen);
-void p_new_patient(indexPos *indexArr, int indLen);
-void p_existing_patient(indexPos *indexArr, int indLen);
-void p_patient_menu(indexPos *indexArr, int patientID, int indLen);
-void p_update(indexPos *indexArr, int patientID, int indLen);
-void p_weight(int patientID);
-void p_intake(indexPos *indexArr, int patientID, int indLen);
-void p_change(int patientID);
-void p_print(int patientID);
-int p_discharge(int patientID);
-
-
 int
 main (void){
   int indLen = 0;

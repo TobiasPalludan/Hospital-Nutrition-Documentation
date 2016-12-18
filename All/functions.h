@@ -11,6 +11,7 @@
 #define LOG_FILE_SIZE 200
 #define MAX_LOG_ENTRIES 10
 #define PRINT_DATA_SIZE 200
+#define RESET_OPTION 4
 
 #define FILE_PATH "patients/"
 #define INDEX_FILE_NAME "PatientIndex.txt"
@@ -96,3 +97,15 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 void stringarrToLowercase(char *stringArr);
 nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX],
 FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[]);
+
+/* Userinterface prototypes*/
+void p_main_menu(indexPos *indexArr, int indLen);
+void p_new_patient(indexPos *indexArr, int indLen);
+void p_existing_patient(indexPos *indexArr, int indLen);
+void p_patient_menu(indexPos *indexArr, int patientID, int indLen);
+void p_update(indexPos *indexArr, int patientID, int indLen);
+void p_weight(int patientID);
+void p_intake(indexPos *indexArr, int patientID, int indLen);
+void p_change(int patientID);
+void p_print(int patientID);
+int p_discharge(int patientID);
