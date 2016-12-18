@@ -4,7 +4,7 @@
 #include <string.h>
 #include <direct.h>
 #include "lib.h"
-#include "functions.h"
+#include "filehandler.h"
 
 	/*Function for adding a person the the system */
   /*Calls the function for creating the index aswell
