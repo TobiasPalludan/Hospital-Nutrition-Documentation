@@ -127,7 +127,8 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 
 		fprintf(filePtr, string);
 
-	} else	/* If the file does not exist, a new one is made */
+	}
+  else	/* If the file does not exist, a new one is made */
 	{
 
 		filePtr = fopen(fileName, "w");
@@ -214,7 +215,8 @@ int find_index(FILE *filePtr, char fileName[]) /* Searches index file for higest
 		return index + 1;
 	}
 	/*If the file is empty it means that there are no patients registered*/
-  else {
+  else
+  {
 		fclose(filePtr);
 		return 1;
 	}
