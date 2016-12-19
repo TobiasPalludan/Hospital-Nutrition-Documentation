@@ -1,15 +1,12 @@
-For at compilere programmet, indtastes følgende i MinGW, afhængigt af sit styresystem.
+For at compilere programmet skal man i sin MinGW indtaste ordet "make" for at compile på en windows computer. 
+Dermed compileres og køres programmet, hvorefter det er muligt for brugeren at bruge programmet. 
 
-For Windows:
-> make win
+Der bliver på standardoutput vist en række handlinger som brugeren kan udføre. 
+For at udføre handlingerne skal brugeren indtaste det tal som tilsvarer handlingen. 
 
-For Mac OS:
-> make mac
-
-Der bliver på standardoutput vist en række handlinger som brugeren kan udføre. For at udføre handlingerne skal brugeren indtaste det tal som tilsvarer handlingen. 
-
-For at se hvilke madvarer der findes i Nutritional_database skal "Nutritional_database.txt" tilgåes udenfor programmet.
+For at se hvilke madvarer der findes i Nutritional_database skal den tilgåes manuelt. 
 
 Programmets funktion er at give brugeren muligheden, for at kunne opbevare information om en person, f.eks. en patient, i en slags database bestående af sorterede mapper med filer i. 
-Brugeren har så muligheden for at tilgå en bestemt mængde af information om en bestemt personen via input i MinGW under programmets runtime.
-Mapperne bliver lavet i den samme sti som programmet ligger i.
+Brugeren har så muligheden for at tilgå en bestemt mængde af information om en bestemt person via input i MinGW under programmets runtime. 
+Mapperne bliver lavet i den samme sti som 
+programmet ligger i.
