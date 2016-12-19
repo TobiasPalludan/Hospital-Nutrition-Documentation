@@ -4,6 +4,8 @@ Dermed compileres og køres programmet, hvorefter det er muligt for brugeren at b
 Der bliver på standardoutput vist en række handlinger som brugeren kan udføre. 
 For at udføre handlingerne skal brugeren indtaste det tal som tilsvarer handlingen. 
 
+Der er i forvejen oprettet en patient # 1, som kan tilgåes gennem programmet og som kan ses i mappen patients/1.
+
 For at se hvilke madvarer der findes i Nutritional_database skal den tilgåes manuelt. 
 
 Programmets funktion er at give brugeren muligheden, for at kunne opbevare information om en person, f.eks. en patient, i en slags database bestående af sorterede mapper med filer i. 
