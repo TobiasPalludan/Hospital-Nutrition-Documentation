@@ -16,8 +16,7 @@
     Output: No return*/
 void add_person(personInfo *person)
 {
-	char fileName[FILE_NAME_SIZE],
-		 log[LOG_FILE_SIZE];
+	char fileName[FILE_NAME_SIZE], log[LOG_FILE_SIZE];
 
 	FILE *personFilePtr;
 
@@ -29,7 +28,7 @@ void add_person(personInfo *person)
 	sprintf(fileName, "%s%d/%d ID.txt", FILE_PATH, person->id, person->id);
 
 	/*Pulls log information from stuct*/
-	sprintf(log, "%d, %s, %.10lld, %s\n", person->id, person->department, person->cprNumber, person->name);
+	sprintf(log, "%d, %s, %.10lld, %s\n",person->id, person->department, person->cprNumber, person->name);
 
   save_in_file(personFilePtr, log, fileName);
 }
@@ -58,19 +57,20 @@ void add_food_intake(int p_ID, nutrition intake[])
 	{
 		if (i == 0)	/* Prints the dish name,total nutrition, and a timestamp */
 		{
-			sprintf(log, "%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp, intake[i].ingredient,
-             intake[i].kiloJoule, intake[i].protein, intake[i].fat);
+			sprintf(log, "%16s   %-21s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g\n", timeStamp,
+			       intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
 
       save_in_file(foodFilePtr, log, fileName);
 		}
 		else /* Prints the ingredients of the dish */
 		{
-      if (intake[i].kiloJoule != 0){
-			  sprintf(log, "\n                   %s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g. \n", intake[i].ingredient,
-               intake[i].kiloJoule, intake[i].protein, intake[i].fat);
+      if (intake[i].kiloJoule != 0)
+      {
+			  sprintf(log, "\n                   %s Energi: %7d KJ. Protein: %6.1lf g. Fat: %6.1lf g. \n",
+			         intake[i].ingredient, intake[i].kiloJoule, intake[i].protein, intake[i].fat);
 
         save_in_file(foodFilePtr, log, fileName);
-        }
+      }
 		}
 	}
   sprintf(log, "\n\n");
@@ -86,12 +86,11 @@ void add_food_intake(int p_ID, nutrition intake[])
 
 void add_condition_log(personInfo person, conditionHistory conditionLog)
 {
-
 	FILE *condtionFilePtr;
 
 	char fileName[FILE_NAME_SIZE],
-		 log[LOG_FILE_SIZE],
-		 timeStamp[TIME_STAMP_SIZE];
+		   log[LOG_FILE_SIZE],
+		   timeStamp[TIME_STAMP_SIZE];
 
 
   conditionLog.bmi = BMI(conditionLog.height, conditionLog.weight);
@@ -104,8 +103,9 @@ void add_condition_log(personInfo person, conditionHistory conditionLog)
 	sprintf(fileName, "%s%d/%d condition.txt", FILE_PATH, person.id, person.id);
 
 
-	sprintf(log, "%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |\n", timeStamp, conditionLog.weight, conditionLog.height,
-         conditionLog.bmi, conditionLog.bmr, conditionLog.temperature, conditionLog.illness);
+	sprintf(log, "%18s | %6.1lf |  %3.1lf | %3.1lf | %5d | %4.1lf | %9s |\n", timeStamp,
+		     conditionLog.weight, conditionLog.height, conditionLog.bmi, conditionLog.bmr,
+		     conditionLog.temperature, conditionLog.illness);
 
 
 	save_in_file(condtionFilePtr, log, fileName);
@@ -120,22 +120,14 @@ void save_in_file(FILE *filePtr, char string[], char fileName[])
 {
 	if (filePtr != NULL) /* appends to file if it exist */
 	{
-
 		filePtr = fopen(fileName, "a");
-
-
 		fprintf(filePtr, string);
-
 	}
   else	/* If the file does not exist, a new one is made */
 	{
-
 		filePtr = fopen(fileName, "w");
-
-
 		fprintf(filePtr, string);
 	}
-
 	fclose(filePtr);
 }
 
@@ -154,7 +146,7 @@ void make_patient_folder(char *string)
 void make_folder(personInfo person)
 {
 	char path[FILE_NAME_SIZE] = { FILE_PATH },
-		 idPath[FILE_NAME_SIZE];
+  		 idPath[FILE_NAME_SIZE];
 
   /* Converts a number to a string (needed for the _mkdir because it needs a string) */
 	itoa(person.id, idPath, 10);
@@ -171,13 +163,12 @@ void make_folder(personInfo person)
    Output: No return, but prints a string to the indexfile via the the function save_in_file*/
 void update_index_file(personInfo *person)
 {
-
 	FILE *indexFilePtr;
 
 	char indexLog[NAME_SIZE],
-		 fileName[NAME_SIZE];
+	  	 fileName[NAME_SIZE];
 
- sprintf(fileName, "%s%s", FILE_PATH, INDEX_FILE_NAME);
+  sprintf(fileName, "%s%s", FILE_PATH, INDEX_FILE_NAME);
 
   /*find_index returns what index/ID the patient should have*/
 	int index = find_index(indexFilePtr, fileName);

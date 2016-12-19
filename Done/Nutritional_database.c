@@ -25,7 +25,8 @@ indexPos* index_database(int *indLen, FILE *dtb)
 
 	/* Database is open. We check if it's empty. If not we skip the first descriptive line */
 	fgetsPtr = fgets(tempString, MAX_LINE_LEN, dtb);
-	if(fgetsPtr == NULL) {
+	if(fgetsPtr == NULL)
+	{
 		puts("The database is completely empty.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -65,11 +66,10 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 	int i = 0;
 	int noSearchTerms = 0;
 	double weight[10];
-    searchTerm foodArr[MAX_LINE_LEN];
+  searchTerm foodArr[MAX_LINE_LEN];
 	nutrition *dish = malloc(100 * sizeof(nutrition));
 
 	/* A prompt that asks for the dish the user is making */
-	i = 0;
 	printf("\nWhat dish do you want to make?\n");
 	scanf(" %[A-z, ]", dish[0].ingredient);
 	dish[0].kiloJoule  = 0;
@@ -79,25 +79,24 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 	i++;
 	noSearchTerms++;
 
-    puts("\nScan your ingredients and amount in grams. (Type 'Exit' or 'e' to stop):");
-    puts("Example format: \"food 123\"");
+  puts("\nScan your ingredients and amount in grams. (Type 'Exit' or 'e' to stop):");
+  puts("Example format: \"food 123\"");
 
 	/* Scan the ingredients you are using.
 	   Does not matter if you are using uppercase or lowercase*/
-    do
-    {
+  do
+  {
+    scanf(" %s", foodArr[i].ingredientName);
+    stringarrToLowercase(foodArr[i].ingredientName);
 
-        scanf(" %s", foodArr[i].ingredientName);
-        stringarrToLowercase(foodArr[i].ingredientName);
+    if (strcmp(foodArr[i].ingredientName, "exit") == 0 || strcmp(foodArr[i].ingredientName, "e") == 0)
+			break;
 
-        if (strcmp(foodArr[i].ingredientName, "exit") == 0 || strcmp(foodArr[i].ingredientName, "e") == 0)
-            break;
+    scanf(" %lf", &weight[i]);
 
-        scanf(" %lf", &weight[i]);
-
-        noSearchTerms++;
-        i++;
-    } while (i < MAX_INGREDIENTS);
+    noSearchTerms++;
+    i++;
+  } while (i < MAX_INGREDIENTS);
 
 	/* These forloops converts the tempString and ingredient names in the index
 	   to lowercase. That is why it does not matter if you are using uppercase
@@ -160,7 +159,8 @@ void find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_IN
 		}
 		else if (noHits == 0)
 		{
-			printf("Error! Ingredient %s could not be recognized. Trying to continue!\n\n", foodArr[i].ingredientName);
+			printf("Error! Ingredient %s could not be recognized. Trying to continue!\n\n",
+				    foodArr[i].ingredientName);
 			noErrors++;
 			continue;
 		}
@@ -177,7 +177,8 @@ void find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_IN
 				else
 					exit(EXIT_FAILURE);
 
-				sscanf(tempLine, " %[^0-9] %d %lf %lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein, &dish[i].fat);
+				sscanf(tempLine, " %[^0-9] %d %lf %lf", dish[i].ingredient, &dish[i].kiloJoule,
+					    &dish[i].protein, &dish[i].fat);
 
 				/*Stores the amount of protein, fat and kiloJoule aswell as weight for each ingredient in dish[i].
 				  It also sums it all together and stores the values in dish[0]. Which then desribes how much
