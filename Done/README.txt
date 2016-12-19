@@ -1,5 +1,5 @@
 For at compilere programmet skal man i sin MinGW indtaste ordet "make win" for at compile på en windows computer, og for mac skal man indtaste "make mac". Dermed compileres 
-og køres programmet, hvorefter det er muligt for at brugeren at bruge programmet. 
+og køres programmet, hvorefter det er muligt for brugeren at bruge programmet. 
 > make win
 > make mac
 

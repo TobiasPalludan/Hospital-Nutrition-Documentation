@@ -189,7 +189,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX],
 							   FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[])
 {
-	int i, j, temp;
+	int i, j, temp, noErrors = 0;
 	char tempLine[MAX_LINE_LEN];
 	for (i = 1; i < noSearchTerms; i++)
 	{
@@ -220,6 +220,10 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 			}
 			printf("Print which one you would like: ");
 			scanf(" %d", &temp);
+		} else if (noHits == 0) {
+			noErrors++;
+			printf("Error! Ingredient %s was not recognised. Trying to continue!\n", foodArr[i].ingredientName);
+			continue;
 		}
 
 		/* Retrieve data from database. Feed it to the dish struct. */
@@ -238,28 +242,14 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
 				dish[i].weight = weight[i];
 
-				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
-				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[i].kiloJoule  = (dish[i].weight / 100) * dish[i].kiloJoule;
+				dish[0].kiloJoule += dish[i].kiloJoule;
+
+				dish[i].protein   += (dish[i].weight / 100) * dish[i].protein;
+				dish[i].protein    = dish[i].protein;
+
 				dish[0].weight	  +=  dish[i].weight;
-				dish[0].noIngredients = noSearchTerms - 1;
-			}
-			else if(temp == i)
-			{
-				printf("You choose: %s\n", searchArr[j].ingredientName);
-				puts("");
-
-				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
-					fgets(tempLine, MAX_LINE_LEN, dtb);
-				else
-					exit(EXIT_FAILURE);
-
-				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
-				dish[i].weight = weight[i];
-
-				dish[0].kiloJoule += (dish[i].weight / 100) * dish[i].kiloJoule;
-				dish[0].protein   += (dish[i].weight / 100) * dish[i].protein;
-				dish[0].weight	  +=  dish[i].weight;
-				dish[0].noIngredients = noSearchTerms - 1;
+				dish[0].noIngredients = noSearchTerms - 1 - noErrors;
 			}
 		}
 	}
