@@ -10,3 +10,4 @@ Salmon, raw		444		21.2		2.3
 Spring onion, raw	139		1.8		0.2
 Pasta, boiled		541		5.0		0.4
 Brown rice, raw		1515		9.0		2.9
+Onion, raw		420		6.9		4.2

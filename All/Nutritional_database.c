@@ -2,74 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-#define MAX_LINE_LEN 50
-#define MAX_CHARS 25
-#define DATABASE_DEPTH 15
-#define MAX_INDEX 100
-#define MAX_INGREDIENTS 20
-
-/* Struct, where element 0 is the meal, and element >0 is a part of the meal */
-typedef struct nutrition
-{
-	char  ingredient[MAX_CHARS];
-	int   kiloJoule;
-	double protein;
-	double weight;
-	int noIngredients;
-} nutrition;
-
-typedef struct indexPos
-{
-	char ingredientName[MAX_CHARS];
-	long int position;
-} indexPos;
-
-typedef struct searchTerm
-{
-    char ingredientName[MAX_CHARS];
-    long int position;
-    float weight;
-} searchTerm;
-
-/* Prototypes */
-indexPos* index_database(int *indLen, FILE *dtb);
-void load_index(FILE *ind, indexPos *indexArr, int indLen);
-nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb);
-void stringarrToLowercase(char *stringArr);
-nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[MAX_INDEX],
-						 FILE *dtb, searchTerm foodArr[MAX_LINE_LEN], nutrition* dish, double weight[]);
-
-int main(void)
-{
-	int indLen = 0;
-	nutrition *meal;
-	char dataFile[] = "Nutritional_database.txt";
-	FILE *dtb;
-
-	/* Open the database file and check if open */
-	dtb = fopen(dataFile, "r+");
-	if(dtb == NULL)
-	{
-		printf("No database with name \"%s\" exists!\n", dataFile);
-		exit(EXIT_FAILURE);
-	}
-
-	indexPos *indexArr;
-	indexArr = index_database(&indLen, dtb);
-
-	/* Ask for ingredient */
-	meal = ingredient_prompt(indLen, indexArr, dtb);
-	printf("Dish name: %s \nKiloJoules: %d kJ \nProtein: %g g \nWeight: %g g\nNo: %d ingredients\n",
-		   meal[0].ingredient, meal[0].kiloJoule, meal[0].protein, meal[0].weight, meal[0].noIngredients);
-
-	/* Free all dynamically allocated arrays, and close database */
-	free(indexArr);
-	free(meal);
-	fclose(dtb);
-
-	return 0;
-}
+#include "Nutritional_database.h"
 
 /*
  * Param indLen is the length of the index array. Returned by the function as a parameter.
@@ -142,6 +75,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 	scanf(" %[A-z, ]", dish[0].ingredient);
 	dish[0].kiloJoule  = 0;
 	dish[0].protein  = 0;
+	dish[0].fat = 0;
 	dish[0].weight = 0;
 	i++;
 	noSearchTerms++;
@@ -166,7 +100,7 @@ nutrition* ingredient_prompt(int indLen, indexPos indexArr[MAX_INDEX], FILE *dtb
 
         noSearchTerms++;
         i++;
-    } while (strcmp(foodArr[i - 1].ingredientName, "exit") != 0);
+    } while (i < MAX_INGREDIENTS);
 
 	/*
 	 * These forloops converts the tempString and ingredient names in the index
@@ -220,9 +154,11 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 			}
 			printf("Print which one you would like: ");
 			scanf(" %d", &temp);
-		} else if (noHits == 0) {
+		}
+		else if (noHits == 0)
+		{
+			printf("Error! Ingredient %s could not be recognized. Trying to continue!\n\n", foodArr[i].ingredientName);
 			noErrors++;
-			printf("Error! Ingredient %s was not recognised. Trying to continue!\n", foodArr[i].ingredientName);
 			continue;
 		}
 
@@ -231,24 +167,26 @@ nutrition* find_database_value(int noSearchTerms, int indLen, indexPos indexArr[
 		{
 			if(temp == j)
 			{
-				printf("You choose: %s\n", searchArr[j].ingredientName);
-				puts("");
+				printf("You choose: %s\n\n", searchArr[j].ingredientName);
 
 				if(!fseek(dtb, searchArr[j].position, SEEK_SET))
 					fgets(tempLine, MAX_LINE_LEN, dtb);
 				else
 					exit(EXIT_FAILURE);
 
-				sscanf(tempLine, " %[^0-9] %d %lf %*lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein);
+				sscanf(tempLine, " %[^0-9] %d %lf %lf", dish[i].ingredient, &dish[i].kiloJoule, &dish[i].protein, &dish[i].fat);
 				dish[i].weight = weight[i];
 
 				dish[i].kiloJoule  = (dish[i].weight / 100) * dish[i].kiloJoule;
 				dish[0].kiloJoule += dish[i].kiloJoule;
 
-				dish[i].protein   += (dish[i].weight / 100) * dish[i].protein;
-				dish[i].protein    = dish[i].protein;
+				dish[i].protein   = (dish[i].weight / 100) * dish[i].protein;
+				dish[0].protein   += dish[i].protein;
 
-				dish[0].weight	  +=  dish[i].weight;
+				dish[i].fat = (dish[i].weight / 100) * dish[i].fat;
+				dish[0].fat += dish[i].fat;
+
+				dish[i].weight	  =  dish[i].weight;
 				dish[0].noIngredients = noSearchTerms - 1 - noErrors;
 			}
 		}
